@@ -11,4 +11,4 @@ ENV TG_BOT_TOKEN="Run telegram-bot-setup.sh"
 
 EXPOSE 5000 5000
 
-CMD ["python", "telegram-bot-run.py"]
+CMD python3 telegram-bot-run.py &> /app/output/telegram-bot-run.log
