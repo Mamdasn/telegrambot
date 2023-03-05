@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# SSL files
+SSL/
+output/
+
 # C extensions
 *.so
 
