@@ -5,6 +5,7 @@ __pycache__/
 
 # SSL files
 SSL/
+# logs of telegram-bot-run.py
 output/
 
 # C extensions
