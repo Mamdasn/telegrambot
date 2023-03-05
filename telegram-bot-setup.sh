@@ -13,6 +13,7 @@ SSL_PRIVATE=$(realpath YOURPRIVATE.key)
 curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS/" -F "certificate=@YOURPUBLIC.pem" https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook
 cd ..
 
+echo
 echo Setting up your environmental variables in Dockerfile
 sed -i "s/TG_BOT_TOKEN=\"Run telegram-bot-setup.sh\"/TG_BOT_TOKEN=\"$TG_BOT_TOKEN\"/g" Dockerfile
 
