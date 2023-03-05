@@ -43,4 +43,5 @@ sudo systemctl stop nginx
 sudo ln -s /etc/nginx/sites-available/portforwarding.txt /etc/nginx/sites-enabled/portforwarding.txt
 sudo systemctl start nginx && sudo systemctl status nginx
 
+[ ! -e "output" ] && mkdir output
 echo Done.
