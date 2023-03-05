@@ -4,14 +4,10 @@ from flask import request, abort
 from telegram_bot_api import parse_message, \
                                 send_message, \
                                 deleteMessage, \
-                                editMessageText, \
-                                message_format_for_postgres, \
-                                answerInlineQuery, \
-                                sendVideo
+                                editMessageText
 from credentials import config
 
 token = config.TG_BOT_TOKEN
-params = pconfig()
 
 app = Flask(__name__)
 
