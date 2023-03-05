@@ -36,10 +36,10 @@ server {
 }
 EOF
 
+sudo systemctl stop nginx
 [ -e "/etc/nginx/sites-enabled/portforwarding.txt" ] && 
 	sudo rm /etc/nginx/sites-enabled/portforwarding.txt
-
 sudo ln -s /etc/nginx/sites-available/portforwarding.txt /etc/nginx/sites-enabled/portforwarding.txt
-sudo systemctl restart nginx && sudo systemctl status nginx
+sudo systemctl start nginx && sudo systemctl status nginx
 
 echo Done.
