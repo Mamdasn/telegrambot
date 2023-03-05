@@ -1,4 +1,7 @@
-# telegrambot
-In this repository, I provided a dockerized telegram bot in python. Using this repo you can easily setup a telegram bot to provide a service to people all around the world.
-## Usage
-First run telegram-bot-setup.sh file to setup the webhook on telegram servers to get messages from the bot as soon as they are sent. In addition Dockerfile is also modified to have the http api token for the telegram bot in it. Then, to run the telegram bot container, just execute the following command `sudo docker-compose up -d`.
+#Telegram Bot
+This repository contains a Telegram bot written in Python and packaged as a Docker container. With this bot, you can easily provide a service to people around the world.
+
+##Usage
+To set up the bot, start by running the `telegram-bot-setup.sh` file. This script will configure a webhook on the Telegram servers to receive messages from the bot as soon as they are sent. The Dockerfile included in this repository has also been modified to include the HTTP API token for the Telegram bot.
+
+To run the Telegram bot container, execute the following command: `sudo docker-compose up -d`.
