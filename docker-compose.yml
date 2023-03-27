@@ -5,6 +5,6 @@ services:
     build: .
     image: "telegrambot:0.0.0"
     ports:
-      - '5000:5000'
+      - "Run telegram-bot-setup.sh"
     volumes:
       - ./output:/app/output
