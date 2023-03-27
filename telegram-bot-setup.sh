@@ -18,7 +18,7 @@ GET_UNUSED_PORT() {
 }
 PORT=$(GET_UNUSED_PORT)
 
-if [ $port -eq 80 ] || [ $port -eq 88 ] || [ $port -eq 443 ] || [ $port -eq 8443 ]; then
+if [ $PORTSSL -eq 80 ] || [ $PORTSSL -eq 88 ] || [ $PORTSSL -eq 443 ] || [ $PORTSSL -eq 8443 ]; then
   echo "The port is valid."
 else
   PORTSSL=443
