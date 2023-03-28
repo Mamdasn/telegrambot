@@ -18,13 +18,16 @@ GET_UNUSED_PORT() {
 }
 PORT=$(GET_UNUSED_PORT)
 
-if [ $PORTSSL -eq 80 ] || [ $PORTSSL -eq 88 ] || [ $PORTSSL -eq 443 ] || [ $PORTSSL -eq 8443 ]; then
-  echo "The port is valid."
-else
-  PORTSSL=443
-  echo "The port is not valid. Changing port to 443"
-fi
+echo Check the ssl port. If it is not any of the suggested ports, it will default in a previously chosen port.
+CHECK_PORT(){
+        PORTSSL=$1
+        DEFPORT=443
+        [ $PORTSSL ] || { echo $DEFPORT && return; }
+        [ $PORTSSL = 80 ] || [ $PORTSSL = 88 ] || [ $PORTSSL = 443 ] || [ $PORTSSL = 8443 ] && echo $PORTSSL || echo $DEFPORT
+}
 
+PORTSSL=$(CHECK_PORT $PORTSSL)
+echo SSL PORT: $PORTSSL
 
 echo Installing nginx to setup the portforwarding from ssl connections to flask
 sudo apt-get install -y nginx
