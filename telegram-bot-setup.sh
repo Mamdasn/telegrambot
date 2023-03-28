@@ -38,7 +38,9 @@ cd SSL
 openssl req -newkey rsa:2048 -sha256 -nodes -keyout YOURPRIVATE.key -x509 -days 365 -out YOURPUBLIC.pem -subj "/C=US/ST=New York/L=Brooklyn/O=Example Brooklyn Company/CN=$IP_ADDRESS"
 SSL_PUBLIC=$(realpath YOURPUBLIC.pem)
 SSL_PRIVATE=$(realpath YOURPRIVATE.key)
-curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$PORTSSL/" -F "certificate=@YOURPUBLIC.pem" https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook
+
+NGINX_LOCATION="portforwarding"
+curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$PORTSSL/$NGINX_LOCATION/" -F "certificate=@YOURPUBLIC.pem" https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook
 cd ..
 
 echo
@@ -56,7 +58,7 @@ server {
   ssl_certificate $SSL_PUBLIC;
   ssl_certificate_key $SSL_PRIVATE;
 
-  location / {
+  location /$NGINX_LOCATION/ {
     proxy_set_header Host \$http_host;
     proxy_redirect off;
     proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -75,3 +77,4 @@ sudo systemctl start nginx && sudo systemctl status nginx
 
 [ ! -e "output" ] && mkdir output
 echo Done.
+
