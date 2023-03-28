@@ -9,6 +9,6 @@ RUN pip3 install -r requirements.txt
 
 ENV TG_BOT_TOKEN="Run telegram-bot-setup.sh"
 
-EXPOSE 5000 5000
+EXPOSE "Run telegram-bot-setup.sh"
 
 CMD python3 telegram-bot-run.py &> /app/output/telegram-bot-run.log
