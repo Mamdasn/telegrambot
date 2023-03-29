@@ -1,6 +1,6 @@
 read -p "Enter the IP address of your vps: " IP_ADDRESS
 read -p "Enter the http api token of your telegram bot: " TG_BOT_TOKEN
-read -p "Enter the port number for the telegram server to send the messages on: [80, 88, 443 or 8443]: " PORTSSL
+read -p "Enter the port number for the telegram server to send the messages on: [88, 443 or 8443]: " PORTSSL
 read -p "Are you having multiple nginx instances [N/y]: " MUTIPLE_NGINX
 
 [ -z "$MUTIPLE_NGINX" ] && MUTIPLE_NGINX="N"
@@ -45,7 +45,7 @@ CHECK_PORT(){
         PORTSSL=$1
         DEFPORT=443
         [ $PORTSSL ] || { echo $DEFPORT && return; }
-        [ $PORTSSL = 80 ] || [ $PORTSSL = 88 ] || [ $PORTSSL = 443 ] || [ $PORTSSL = 8443 ] && echo $PORTSSL || echo $DEFPORT
+        [ $PORTSSL = 88 ] || [ $PORTSSL = 443 ] || [ $PORTSSL = 8443 ] && echo $PORTSSL || echo $DEFPORT
 }
 
 PORTSSL=$(CHECK_PORT $PORTSSL)
