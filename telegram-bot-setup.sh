@@ -20,8 +20,8 @@ NEW_NGINX_LOCATION() {
 }
 
 [ "$MUTIPLE_NGINX" = "N" ] &&
-    sudo rm /etc/nginx/sites-enabled/portforwarding*.txt
-    sudo rm /etc/nginx/sites-available/portforwarding*.txt
+    sudo rm /etc/nginx/sites-enabled/portforwarding*.txt  >/dev/null 2>&1
+    sudo rm /etc/nginx/sites-available/portforwarding*.txt >/dev/null 2>&1
 
 # Use multiple config files for nginx 
 [ "$MUTIPLE_NGINX" = "N" ] &&
