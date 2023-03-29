@@ -35,10 +35,12 @@ GET_UNUSED_PORT() {
     RANDOM=$$
     LOW_BOUND=49152
     RANGE=16384
+    CANDIDATE=49152
     while true; do
         CANDIDATE=$(($LOW_BOUND + ($RANDOM % $RANGE)))
-        netstat -tln | grep ":$CANDIDATE " &>/dev/null || { echo $CANDIDATE && break; }
+        netstat -tln | grep ":$CANDIDATE " &>/dev/null || break
     done
+    echo $CANDIDATE
 }
 
 PORT=$(GET_UNUSED_PORT)
