@@ -55,7 +55,8 @@ PORTSSL=$(CHECK_PORT $PORTSSL)
 echo SSL PORT: $PORTSSL
 
 echo Installing nginx to setup the portforwarding from ssl connections to flask
-sudo apt-get install -y nginx
+sudo apt update -y
+sudo apt install -y nginx
 
 echo Setting up ssl files
 mkdir SSL
