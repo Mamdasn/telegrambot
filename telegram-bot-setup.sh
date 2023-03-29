@@ -35,14 +35,15 @@ GET_UNUSED_PORT() {
     RANDOM=$$
     LOW_BOUND=49152
     RANGE=16384
-    CANDIDATE=49152
     while true; do
         CANDIDATE=$(($LOW_BOUND + ($RANDOM % $RANGE)))
-        netstat -tln | grep ":$CANDIDATE " &>/dev/null || break
+        (echo "" >/dev/tcp/127.0.0.1/${CANDIDATE}) >/dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            echo $CANDIDATE
+            break
+        fi
     done
-    echo $CANDIDATE
 }
-
 PORT=$(GET_UNUSED_PORT)
 
 echo Check the ssl port. If it is not any of the suggested ports, it will default in a previously chosen port.
