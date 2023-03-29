@@ -1,3 +1,5 @@
+#!/bin/sh
+
 read -p "Enter the IP address of your vps: " IP_ADDRESS
 read -p "Enter the http api token of your telegram bot: " TG_BOT_TOKEN
 read -p "Enter the port number for the telegram server to send the messages on: [88, 443 or 8443]: " PORTSSL
@@ -18,7 +20,8 @@ NEW_NGINX_LOCATION() {
 }
 
 [ "$MUTIPLE_NGINX" = "N" ] &&
-    sudo rm /etc/nginx/sites-{available,enabled}/portforwarding*.txt
+    sudo rm /etc/nginx/sites-enabled/portforwarding*.txt
+    sudo rm /etc/nginx/sites-available/portforwarding*.txt
 
 # Use multiple config files for nginx 
 [ "$MUTIPLE_NGINX" = "N" ] &&
