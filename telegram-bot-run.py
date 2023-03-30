@@ -26,10 +26,13 @@ def handle_commands(message):
 def handle_message(chat_id, message_info):
     message, message_id = message_info
     reply = handle_commands(message) 
+    keyboard = [["/start"]]
+    reply_markup = {"keyboard": keyboard, "resize_keyboard": True}
     r = send_message(
             chat_id=chat_id, 
             text=reply,
             reply_to_message_id=message_id,
+            reply_markup=reply_markup
             )
     print(r)
     
