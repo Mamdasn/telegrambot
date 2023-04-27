@@ -6,13 +6,10 @@ First you should have access to a VPS. You can order it for cheap online. Then, 
 
 To run the Telegram bot container, make sure you have already installed docker and docker-compose on your device. You can do so by entering this command in a terminal:
 
-<div style="border-left: 3px solid gray; padding: 0px 0px 0px 5px;">
-
-```
+```bash
 apt update -y
 apt install docker docker-compose
 ```
-</div>
 
 Then, execute the following command: `sudo docker-compose up -d`. Docker-compose will spawn a docker container after the Dockerfile is built. There you go, now you should have a fully functional Telegram bot running in a docker container.
 
