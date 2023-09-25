@@ -86,6 +86,21 @@ iplist=$(curl -s https://core.telegram.org/resources/cidr.txt)
 whitelist=$(echo "$iplist" | awk '{print "    allow " $0";"}')
 echo Done.
 
+echo Modifying the default firewall of docker to UFW so it is easier to manage the docker ports
+cat << EOF | sudo tee /etc/docker/daemon.json
+{
+  "iptables": false
+}
+EOF
+sudo systemctl restart docker
+sudo systemctl stop ufw
+sudo ufw default allow outgoing
+sudo ufw default deny incoming
+sudo ufw allow in on docker0
+sudo ufw allow out on docker0
+sudo systemctl start ufw
+echo Done.
+
 cat << EOF | sudo tee /etc/nginx/sites-available/$NGINX_CONFIG
 server {
   listen $PORTSSL ssl;
