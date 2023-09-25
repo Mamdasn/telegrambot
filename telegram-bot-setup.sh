@@ -56,6 +56,11 @@ CHECK_PORT(){
 PORTSSL=$(CHECK_PORT $PORTSSL)
 echo SSL PORT: $PORTSSL
 
+echo Making $PORTSSL open on UFW
+sudo ufw allow $PORTSSL
+sudo systemctl restart ufw
+echo Done
+
 echo Installing nginx to setup the portforwarding from ssl connections to flask
 sudo apt update -y
 sudo apt install -y nginx
