@@ -81,6 +81,11 @@ sed -i "s/EXPOSE \"Run telegram-bot-setup.sh\"/EXPOSE $PORT $PORT/g" Dockerfile
 sed -i "s/port=\"Run telegram-bot-setup.sh\"/port=$PORT/g" telegram-bot-run.py
 sed -i "s/- \"Run telegram-bot-setup.sh\"/- \'$PORT:$PORT\'/g" docker-compose.yml
 
+echo Downloading a list of telegram server ips to make a whitelist for nginx...
+iplist=$(curl -s https://core.telegram.org/resources/cidr.txt)
+whitelist=$(echo "$iplist" | awk '{print "    allow " $0";"}')
+echo Done.
+
 cat << EOF | sudo tee /etc/nginx/sites-available/$NGINX_CONFIG
 server {
   listen $PORTSSL ssl;
@@ -89,6 +94,8 @@ server {
   ssl_certificate_key $SSL_PRIVATE;
 
   location /$NGINX_LOCATION/ {
+$whitelist
+    deny all;
     proxy_set_header Host \$http_host;
     proxy_redirect off;
     proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
