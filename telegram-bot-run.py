@@ -13,9 +13,10 @@ app = Flask(__name__)
 
 def manage_messages(msg):
     parsed_message = parse_message(msg)
-    chat_id, message_info, chat_type = parsed_message
-    if chat_type == 'message':
-        handle_message(chat_id, message_info)
+    if parsed_message:
+        chat_id, message_info, chat_type = parsed_message
+        if chat_type == 'message':
+            handle_message(chat_id, message_info)
         
 def handle_commands(message):
     reply = 'send /start to start the bot.'
