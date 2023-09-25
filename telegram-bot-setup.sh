@@ -8,7 +8,6 @@ read -p "Are you having multiple nginx instances [N/y]: " MUTIPLE_NGINX
 [ -z "$MUTIPLE_NGINX" ] && MUTIPLE_NGINX="N"
 [ "$MUTIPLE_NGINX" != "y" ] && MUTIPLE_NGINX="N"
 
-
 NEW_NGINX_LOCATION() {
     seq -w 0 5 | while read i; 
     do
@@ -64,11 +63,9 @@ sudo apt install -y nginx
 echo Setting up ssl files
 mkdir SSL
 cd SSL
-openssl req -newkey rsa:2048 -sha256 -nodes -keyout YOURPRIVATE.key -x509 -days 365 -out YOURPUBLIC.pem -subj "/C=US/ST=New York/L=Brooklyn/O=Example Brooklyn Company/CN=$IP_ADDRESS"
+openssl req -newkey rsa:8192 -sha256 -nodes -keyout YOURPRIVATE.key -x509 -days 365 -out YOURPUBLIC.pem -subj "/C=US/ST=New York/L=Brooklyn/O=Example Brooklyn Company/CN=$IP_ADDRESS"
 SSL_PUBLIC=$(realpath YOURPUBLIC.pem)
 SSL_PRIVATE=$(realpath YOURPRIVATE.key)
-
-
 curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$PORTSSL/$NGINX_LOCATION/" -F "certificate=@YOURPUBLIC.pem" https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook
 cd ..
 
@@ -78,7 +75,6 @@ sed -i "s/TG_BOT_TOKEN=\"Run telegram-bot-setup.sh\"/TG_BOT_TOKEN=\"$TG_BOT_TOKE
 sed -i "s/EXPOSE \"Run telegram-bot-setup.sh\"/EXPOSE $PORT $PORT/g" Dockerfile
 sed -i "s/port=\"Run telegram-bot-setup.sh\"/port=$PORT/g" telegram-bot-run.py
 sed -i "s/- \"Run telegram-bot-setup.sh\"/- \'$PORT:$PORT\'/g" docker-compose.yml
-
 
 cat << EOF | sudo tee /etc/nginx/sites-available/$NGINX_CONFIG
 server {
