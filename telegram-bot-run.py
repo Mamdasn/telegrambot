@@ -15,7 +15,7 @@ def manage_messages(msg):
     parsed_message = parse_message(msg)
     if parsed_message:
         chat_id, message_info, chat_type = parsed_message
-        if chat_type == 'message':
+        if chat_type == 'private message':
             handle_message(chat_id, message_info)
         
 def handle_commands(message):
