@@ -1,131 +1,30 @@
 #!/bin/sh
 
-read -p "Enter the IP address of your vps: " IP_ADDRESS
-read -p "Enter the http api token of your telegram bot: " TG_BOT_TOKEN
-read -p "Enter the port number for the telegram server to send the messages on: [88, 443 or 8443]: " PORTSSL
-read -p "Are you having multiple nginx instances [N/y]: " MUTIPLE_NGINX
+[ -z $IP_ADDRESS ] &&
+	read -p "Enter the IP address of your vps: " IP_ADDRESS &&
+		sed -i "s/IP_ADDRESS\=/IP_ADDRESS\=$IP_ADDRESS/g" setenv.sh
+[ -z $TG_BOT_TOKEN ] &&
+	read -p "Enter the http api token of your telegram bot: " TG_BOT_TOKEN &&
+		sed -i "s/TG_BOT_TOKEN\=/TG_BOT_TOKEN\=$TG_BOT_TOKEN/g" setenv.sh
 
-[ -z "$MUTIPLE_NGINX" ] && MUTIPLE_NGINX="N"
-[ "$MUTIPLE_NGINX" != "y" ] && MUTIPLE_NGINX="N"
-
-NEW_NGINX_LOCATION() {
-    seq -w 0 5 | while read i; 
-    do
-	            NGINX_LOCATION="portforwarding$i";
-                    [ ! -e "/etc/nginx/sites-enabled/$NGINX_LOCATION.txt" ] && 
-				echo $NGINX_LOCATION && 
-				break
-    done
-}
-
-[ "$MUTIPLE_NGINX" = "N" ] &&
-    sudo rm /etc/nginx/sites-enabled/portforwarding*.txt  >/dev/null 2>&1
-    sudo rm /etc/nginx/sites-available/portforwarding*.txt >/dev/null 2>&1
-
-# Use multiple config files for nginx 
-[ "$MUTIPLE_NGINX" = "N" ] &&
-	NGINX_LOCATION="portforwarding0" ||
-		NGINX_LOCATION=$(NEW_NGINX_LOCATION)
-
-NGINX_CONFIG="$NGINX_LOCATION.txt"
-
-echo Generating a random port for flask service to listen on internally before nginx redirection from PORTSSL to PORT
-GET_UNUSED_PORT() {
-    RANDOM=$$
-    LOW_BOUND=49152
-    RANGE=16384
-    while true; do
-        CANDIDATE=$(($LOW_BOUND + ($RANDOM % $RANGE)))
-        (echo "" >/dev/tcp/127.0.0.1/${CANDIDATE}) >/dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            echo $CANDIDATE
-            break
-        fi
-    done
-}
-PORT=$(GET_UNUSED_PORT)
-
-echo Check the ssl port. If it is not any of the suggested ports, it will default in a previously chosen port.
-CHECK_PORT(){
-        PORTSSL=$1
-        DEFPORT=443
-        [ $PORTSSL ] || { echo $DEFPORT && return; }
-        [ $PORTSSL = 88 ] || [ $PORTSSL = 443 ] || [ $PORTSSL = 8443 ] && echo $PORTSSL || echo $DEFPORT
-}
-
-PORTSSL=$(CHECK_PORT $PORTSSL)
-echo SSL PORT: $PORTSSL
-
-echo Making $PORTSSL open on UFW
-sudo ufw allow $PORTSSL
-sudo systemctl restart ufw
-echo Done
-
-echo Installing nginx to setup the portforwarding from ssl connections to flask
-sudo apt update -y
-sudo apt install -y nginx
+PORTSSL=443
 
 echo Setting up ssl files
-mkdir SSL
-cd SSL
-openssl req -newkey rsa:8192 -sha256 -nodes -keyout YOURPRIVATE.key -x509 -days 365 -out YOURPUBLIC.pem -subj "/C=US/ST=New York/L=Brooklyn/O=Example Brooklyn Company/CN=$IP_ADDRESS"
+mkdir SSLFILES
+cd SSLFILES
+openssl req -newkey rsa:8192 -sha256 -nodes -keyout YOURPRIVATE.key -x509 -days 365 -out YOURPUBLIC.pem -subj "/C=DE/ST=Berlin/L=Berlin/O=FERI Company/CN"
 SSL_PUBLIC=$(realpath YOURPUBLIC.pem)
 SSL_PRIVATE=$(realpath YOURPRIVATE.key)
-curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$PORTSSL/$NGINX_LOCATION/" -F "certificate=@YOURPUBLIC.pem" https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook
+curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$PORTSSL/" -F "certificate=@YOURPUBLIC.pem" https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook
 cd ..
 
-echo
-echo Setting up your environmental variables in Dockerfile
-sed -i "s/TG_BOT_TOKEN=\"Run telegram-bot-setup.sh\"/TG_BOT_TOKEN=\"$TG_BOT_TOKEN\"/g" Dockerfile
-sed -i "s/EXPOSE \"Run telegram-bot-setup.sh\"/EXPOSE $PORT $PORT/g" Dockerfile
-sed -i "s/port=\"Run telegram-bot-setup.sh\"/port=$PORT/g" telegram-bot-run.py
-sed -i "s/- \"Run telegram-bot-setup.sh\"/- \'$PORT:$PORT\'/g" docker-compose.yml
-
 echo Downloading a list of telegram server ips to make a whitelist for nginx...
-iplist=$(curl -s https://core.telegram.org/resources/cidr.txt)
-whitelist=$(echo "$iplist" | awk '{print "    allow " $0";"}')
+IPLIST=$(curl -s https://core.telegram.org/resources/cidr.txt)
+WHITE_LISTED_IPS=$(echo "$IPLIST" | awk '{print "    allow " $0";"}')
 echo Done.
 
-echo Modifying the default firewall of docker to UFW so it is easier to manage the docker ports
-cat << EOF | sudo tee /etc/docker/daemon.json
-{
-  "iptables": false
-}
-EOF
-sudo systemctl restart docker
-sudo systemctl stop ufw
-sudo ufw default allow outgoing
-sudo ufw default deny incoming
-sudo ufw allow in on docker0
-sudo ufw allow out on docker0
-sudo systemctl start ufw
-echo Done.
+echo
+echo Setting up the white listed IPs in the nginx configuration file
+sed -i "s/WHITE_LISTED_IPS/$WHITE_LISTED_IPS/g" portforwarding.conf
 
-cat << EOF | sudo tee /etc/nginx/sites-available/$NGINX_CONFIG
-server {
-  listen $PORTSSL ssl;
-  server_name $IP_ADDRESS;
-  ssl_certificate $SSL_PUBLIC;
-  ssl_certificate_key $SSL_PRIVATE;
-
-  location /$NGINX_LOCATION/ {
-$whitelist
-    deny all;
-    proxy_set_header Host \$http_host;
-    proxy_redirect off;
-    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    proxy_set_header X-Real-IP \$remote_addr;
-    proxy_set_header X-Scheme \$scheme;
-    proxy_pass http://0.0.0.0:$PORT/;
-    }
-}
-EOF
-
-sudo systemctl stop nginx
-[ -e "/etc/nginx/sites-enabled/$NGINX_CONFIG" ] &&
-        sudo rm /etc/nginx/sites-enabled/$NGINX_CONFIG
-sudo ln -s /etc/nginx/sites-available/$NGINX_CONFIG /etc/nginx/sites-enabled/$NGINX_CONFIG
-sudo systemctl start nginx && sudo systemctl status nginx
-
-[ ! -e "output" ] && mkdir output
-echo Done.
+echo "Run this command to start the telegram bot: source setenv.sh && docker compose up"
