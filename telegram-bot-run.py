@@ -6,6 +6,7 @@ from telegram_bot_api import parse_message, \
                                 deleteMessage, \
                                 editMessageText
 from credentials import config
+import json
 
 token = config.TG_BOT_TOKEN
 
@@ -35,12 +36,12 @@ def handle_message(chat_id, message_info):
             reply_to_message_id=message_id,
             reply_markup=reply_markup
             )
-    print(r)
+    print('Sent response:', r)
     
 @app.route('/', methods=['POST'])
 def index():
     message = request.get_json(force=True)
-    print(message)
+    print('Received message:', message)
     manage_messages(message)
     return Response('Ok', status=200)
 
@@ -51,5 +52,5 @@ def main():
 if __name__ == "__main__": 
 
 
-    app.run(host="0.0.0.0", port="Run telegram-bot-setup.sh")
+    app.run(host="0.0.0.0", port=5000)
 
