@@ -1,10 +1,15 @@
 version: '3.8'
- 
+
 services:
-  TelegramBot:
-    build: .
-    image: "telegrambot:0.0.0"
+  telegram_bot:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: telegrambot:0.0.0
     ports:
-      - "Run telegram-bot-setup.sh"
+      - '443:443'
+    environment:
+      - IP_ADDRESS=${IP_ADDRESS}
+      - TG_BOT_TOKEN=${TG_BOT_TOKEN}
     volumes:
       - ./output:/app/output

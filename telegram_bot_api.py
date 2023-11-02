@@ -4,6 +4,41 @@ from credentials import config
 token = config.TG_BOT_TOKEN
 base_link = f'https://api.telegram.org/bot{token}'
 
+class Message:
+    def __init__(self, message: dict):
+        self._message = message
+    @staticmethod
+    def _getitem(dic, key):
+        keys = key if isinstance(key, tuple) else (key,)
+        query = dic
+        for k in keys:
+            if not isinstance(query, dict): return None
+            query = query.get(k)
+        return query 
+    @property
+    def message(self):
+        return self._getitem(self._message, 'message')
+    @property
+    def chat(self):
+        return self._getitem(self.message, 'chat')
+    @property
+    def chat_id(self):
+        return self._getitem(self.message, ('chat', 'id'))
+    @property
+    def chat_type(self):
+        return self._getitem(self.message, ('chat', 'type'))
+    @property
+    def message_id(self):
+        if self.chat_type == 'private':
+            return self._getitem(self.message, 'message_id')
+    @property
+    def message_text(self):
+        if self.chat_type == 'private':
+            return self._getitem(self.message, 'text')
+    @property
+    def message_info(self):
+        return (self.message_text, self.message_id)
+
 def parse_message(msg):
     """
     Parses a message object received from the Telegram API.
@@ -14,21 +49,11 @@ def parse_message(msg):
     Returns:
         chat_id (int): The ID of the chat the message was sent in.
         message_info (list): A list containing information about the message.
-        message_type (str): Either 'callback_query' or 'message'.
+        message_type (str): 'private message' to indicate the type of the returned message.
     """
-    # message check
-    message = msg.get('message')
-    if message:
-        chat = message.get('chat')
-        chat_id = chat.get('id')
-        chat_type = chat.get('type')
-        if chat_type == 'private': 
-            message_id = message.get('message_id')
-            txt = message.get('text')
-            message_info = [txt, message_id]
-            return chat_id, message_info, 'message'
-
-    return None, None, None
+    msg = Message(msg)
+    if msg.chat_type == 'private': 
+        return msg.chat_id, msg.message_info, 'private message'
     
 def sendChatAction(chat_id, action='typing'): 
     """
