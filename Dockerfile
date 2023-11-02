@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
+
 FROM python:3.11-alpine
 
 # Install nginx
-RUN apk --no-cache add nginx
+RUN apk --no-cache add nginx curl openssl
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -20,13 +21,15 @@ COPY . .
 COPY portforwarding.conf /etc/nginx/nginx.conf
 
 # Copy configuration files
-COPY SSLFILES/YOURPUBLIC.pem /etc/nginx/cert.pem
-COPY SSLFILES/YOURPRIVATE.key /etc/nginx/cert.key
+#COPY SSLFILES/YOURPUBLIC.pem /etc/nginx/cert.pem
+#COPY SSLFILES/YOURPRIVATE.key /etc/nginx/cert.key
 
 EXPOSE 443
 
 # Create a directory in the container to log the output of the code
 RUN mkdir -p /app/output
+RUN chmod +x nginx-setup.sh
+RUN chmod +x initial-webhook-setup.sh
 
 # Specify the command to run on container start
-CMD ["sh", "-c", "nginx && python3 telegram-bot-run.py >> /app/output/telegram.logs 2>&1"]
+CMD ["sh", "-c", "/app/initial-webhook-setup.sh && /app/nginx-setup.sh && nginx && python3 telegram-bot-run.py >> /app/output/telegram.logs 2>&1"]
