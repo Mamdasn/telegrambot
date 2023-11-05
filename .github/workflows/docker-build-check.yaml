@@ -1,0 +1,24 @@
+name: Build and test Docker image
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Build telegrambot Docker image
+        run: docker build -t telegrambot telegrambot
+
+      - name: Check whether telegrambot Docker image was built successfully
+        run: |
+          docker images
+          if [[ -z "$(docker images -q telegrambot)" ]]; then
+            echo "telegrambot Docker image was not built successfully."
+            exit 1
+          fi
