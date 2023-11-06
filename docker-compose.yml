@@ -10,4 +10,4 @@ services:
       - IP_ADDRESS=${IP_ADDRESS}
       - TG_BOT_TOKEN=${TG_BOT_TOKEN}
     volumes:
-      - ./output:/app/output
+      - ./telegrambot/output:/app/output

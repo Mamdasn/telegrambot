@@ -20,10 +20,6 @@ COPY . .
 # Copy the Nginx configuration file
 COPY portforwarding.conf /etc/nginx/nginx.conf
 
-# Copy configuration files
-#COPY SSLFILES/YOURPUBLIC.pem /etc/nginx/cert.pem
-#COPY SSLFILES/YOURPRIVATE.key /etc/nginx/cert.key
-
 EXPOSE 443
 
 # Create a directory in the container to log the output of the code

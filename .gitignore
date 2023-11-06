@@ -1,12 +1,13 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+telegrambot/__pycache__/
 *.py[cod]
 *$py.class
 
 # SSL files
-SSLFILES/
+telegrambot/SSLFILES/
 # logs of telegram-bot-run.py
-output/
+telegrambot/output/
 
 # C extensions
 *.so
