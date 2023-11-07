@@ -1,0 +1,25 @@
+name: Deploy to Google Cloud
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ssh_key
+        chmod 600 ssh_key
+        echo "Host ${{ secrets.SSH_HOST }}\n  IdentityFile $(pwd)/ssh_key\n  UserKnownHostsFile=/dev/null\n  StrictHostKeyChecking=no" > ssh_config
+
+    - name: Deploy to Google Cloud
+      env:
+        SSH_CONFIG: ${{ github.workspace }}/ssh_config
+      run: |
+        ssh -F $SSH_CONFIG ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ~/telegram-bot-simple && docker compose down && docker prune -af && git pull && docker-compose up -d"
