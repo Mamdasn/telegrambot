@@ -22,5 +22,6 @@ jobs:
       env:
         SSH_CONFIG: ${{ github.workspace }}/ssh_config
       run: |
-        ssh-keyscan -t rsa ${{ secrets.SSH_HOST }} >> $SSH_CONFIG/known_hosts
+        mkdir -p ~/.ssh
+        ssh-keyscan -t rsa ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         ssh -F $SSH_CONFIG ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ~/telegrambot && docker compose down && docker prune -af && git pull && docker-compose up -d"
