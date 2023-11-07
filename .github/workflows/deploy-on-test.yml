@@ -23,4 +23,4 @@ jobs:
         SSH_CONFIG: ssh_config
       run: |
         ssh-keyscan -t rsa ${{ secrets.SSH_HOST }} >> ~/known_hosts
-        ssh -vvv -o UserKnownHostsFile=~/known_hosts -i ~/id_rsa ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd /home/${{ secrets.SSH_USERNAME }}/telegrambot && docker compose down && docker system prune -af && git pull && docker-compose up -d"
+        ssh -vvv -o UserKnownHostsFile=~/known_hosts -i ~/id_rsa ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd telegrambot && docker compose down && docker system prune -af && git pull && docker-compose up -d"
