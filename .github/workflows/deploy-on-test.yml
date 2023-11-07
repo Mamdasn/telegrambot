@@ -14,9 +14,9 @@ jobs:
 
     - name: Set up SSH
       run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
-        chmod 600 id_rsa
-        echo "Host ${{ secrets.SSH_HOST }}\n  IdentityFile $(pwd)/id_rsa\n  UserKnownHostsFile=/dev/null\n" > ssh_config
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/id_rsa
+        chmod 600 ~/id_rsa
+        echo "Host ${{ secrets.SSH_HOST }}\n  IdentityFile ~/id_rsa\n  UserKnownHostsFile=/dev/null\n" > ssh_config
 
     - name: Deploy to Google Cloud
       env:
