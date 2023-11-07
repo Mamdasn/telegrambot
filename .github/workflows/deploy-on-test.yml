@@ -22,4 +22,4 @@ jobs:
       env:
         SSH_CONFIG: ${{ github.workspace }}/ssh_config
       run: |
-        ssh -F $SSH_CONFIG ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ~/telegram-bot-simple && docker compose down && docker prune -af && git pull && docker-compose up -d"
+        ssh -F $SSH_CONFIG ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ~/telegrambot && docker compose down && docker prune -af && git pull && docker-compose up -d"
