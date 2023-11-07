@@ -15,7 +15,7 @@ jobs:
     - name: Set up SSH
       run: |
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/id_rsa
-
+        chmod 600 ~/id_rsa
     - name: Deploy to Google Cloud
       run: |
         ssh-keyscan -t rsa ${{ secrets.SSH_HOST }} >> ~/known_hosts
