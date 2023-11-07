@@ -18,8 +18,8 @@ jobs:
         chmod 600 ~/id_rsa
     - name: Deploy to Google Cloud
       env:
-        - IP_ADDRESS: ${{secrets.SSH_HOST}}
-        - TG_BOT_TOKEN: ${{secrets.TG_BOT_TOKEN}}
+        IP_ADDRESS: ${{secrets.SSH_HOST}}
+        TG_BOT_TOKEN: ${{secrets.TG_BOT_TOKEN}}
       run: |
         ssh-keyscan -t rsa ${{ secrets.SSH_HOST }} >> ~/known_hosts
         ssh -v -o UserKnownHostsFile=~/known_hosts -i ~/id_rsa ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "source ~/.bashrc && cd telegrambot && docker compose down && docker system prune -af && git pull && docker compose up -d"
