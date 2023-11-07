@@ -20,9 +20,11 @@ def manage_messages(msg):
             handle_message(chat_id, message_info)
 
 def handle_commands(message):
-    reply = 'send /start to start the bot.'
+    reply = 'Send /start to start the bot.'
     if message == '/start':
-        reply = 'Hello!'
+        reply = "I reply and you can't do anything about it!"
+    elif message == "🌈":
+        reply = "🍹"
     return reply
 
 def handle_message(chat_id, message_info):
