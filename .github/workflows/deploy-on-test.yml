@@ -13,10 +13,10 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up SSH
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ssh_key
-        echo "Host ${{ secrets.SSH_HOST }}\n  IdentityFile ~/.ssh/id_rsa\n  UserKnownHostsFile=/dev/null" > ssh_config
+      run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Add SSH private key to SSH agent
+        run: ssh-agent bash -c "echo '${{ secrets.SSH_PRIVATE_KEY }}' | ssh-add -k"
 
     - name: Deploy to Google Cloud
       env:
@@ -24,4 +24,4 @@ jobs:
         SSH_KNOWN_HOSTS: ~/.ssh/known_hosts
       run: |
         ssh-keyscan -t rsa ${{ secrets.SSH_HOST }} >> $SSH_KNOWN_HOSTS
-        ssh -vvv -o UserKnownHostsFile=$SSH_KNOWN_HOSTS -F $SSH_CONFIG ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ~/telegrambot && docker compose down && docker system prune -af && git pull && docker-compose up -d"
+        ssh -vvv -o UserKnownHostsFile=$SSH_KNOWN_HOSTS -i ~/.ssh/id_rsa ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ~/telegrambot && docker compose down && docker system prune -af && git pull && docker-compose up -d"
