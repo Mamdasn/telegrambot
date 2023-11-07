@@ -16,7 +16,7 @@ jobs:
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
     - name: Add SSH private key to SSH agent
-        run: ssh-agent bash -c "echo '${{ secrets.SSH_PRIVATE_KEY }}' | ssh-add -k"
+      run: ssh-agent bash -c "echo '${{ secrets.SSH_PRIVATE_KEY }}' | ssh-add -k"
 
     - name: Deploy to Google Cloud
       env:
