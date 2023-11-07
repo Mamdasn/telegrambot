@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   telegram_bot:
-    build: telegrambot
+    build: telegram-bot-simple
     image: sfarhad/telegram-bot-simple:0.0.0
     ports:
       - '443:443'
