@@ -18,26 +18,26 @@ def manage_messages(msg):
         chat_id, message_info, chat_type = parsed_message
         if chat_type == 'private message':
             handle_message(chat_id, message_info)
-        
+
 def handle_commands(message):
     reply = 'send /start to start the bot.'
     if message == '/start':
         reply = 'Hello!'
     return reply
-    
+
 def handle_message(chat_id, message_info):
     message, message_id = message_info
-    reply = handle_commands(message) 
-    keyboard = [["/start"]]
+    reply = handle_commands(message)
+    keyboard = [["/start", "🌈"]]
     reply_markup = {"keyboard": keyboard, "resize_keyboard": True}
     r = send_message(
-            chat_id=chat_id, 
+            chat_id=chat_id,
             text=reply,
             reply_to_message_id=message_id,
             reply_markup=reply_markup
             )
     print('Sent response:', r)
-    
+
 @app.route('/', methods=['POST'])
 def index():
     message = request.get_json(force=True)
@@ -47,10 +47,9 @@ def index():
 
 def main():
     pass
- 
 
-if __name__ == "__main__": 
+
+if __name__ == "__main__":
 
 
     app.run(host="0.0.0.0", port=5000)
-
