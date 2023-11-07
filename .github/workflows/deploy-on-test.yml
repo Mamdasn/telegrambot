@@ -26,4 +26,5 @@ jobs:
                                                                                                                     && docker system prune -af \
                                                                                                                     && git fetch --all \
                                                                                                                     && git switch deploy \
+                                                                                                                    && git merge origin/deploy \
                                                                                                                     && docker compose up -d"
