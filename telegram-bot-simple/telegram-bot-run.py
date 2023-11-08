@@ -6,6 +6,7 @@ from telegram_bot_api import parse_message, \
                                 deleteMessage, \
                                 editMessageText
 from credentials import config
+import asyncio
 import json
 
 token = config.TG_BOT_TOKEN
@@ -32,12 +33,14 @@ def handle_message(chat_id, message_info):
     reply = handle_commands(message)
     keyboard = [["/start", "🌈"]]
     reply_markup = {"keyboard": keyboard, "resize_keyboard": True}
-    r = send_message(
-            chat_id=chat_id,
-            text=reply,
-            reply_to_message_id=message_id,
-            reply_markup=reply_markup
+    r = asyncio.run(
+            send_message(
+                        chat_id=chat_id,
+                        text=reply,
+                        reply_to_message_id=message_id,
+                        reply_markup=reply_markup
             )
+        )
     print('Sent response:', r)
 
 @app.route('/', methods=['POST'])
