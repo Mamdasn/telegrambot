@@ -1,4 +1,5 @@
-import requests
+import aiohttp
+import asyncio
 from credentials import config
 
 token = config.TG_BOT_TOKEN
@@ -54,8 +55,13 @@ def parse_message(msg):
     msg = Message(msg)
     if msg.chat_type == 'private': 
         return msg.chat_id, msg.message_info, 'private message'
-    
-def sendChatAction(chat_id, action='typing'): 
+
+async def post_json(url, json_data):
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, json=json_data) as response:
+            return await response.text()
+
+async def sendChatAction(chat_id, action='typing'): 
     """
     Parameters:
     ----------
@@ -69,10 +75,10 @@ def sendChatAction(chat_id, action='typing'):
     """
     url = f"{base_link}/sendChatAction"
     payload = {'chat_id': chat_id, 'action': action}
-    r = requests.post(url, json=payload)
-    return r
+    r = asyncio.create_task(post_json(url, payload))
+    return await r
 
-def send_message(chat_id, text, reply_to_message_id=None, reply_markup=None):
+async def send_message(chat_id, text, reply_to_message_id=None, reply_markup=None):
     """
     Parameters:
     ----------
@@ -86,17 +92,18 @@ def send_message(chat_id, text, reply_to_message_id=None, reply_markup=None):
     Return:
         Request response
     """
-    sendChatAction(chat_id, action='typing')
+    
+    asyncio.create_task(sendChatAction(chat_id, action='typing'))
     url = f"{base_link}/sendMessage"
     payload = {'chat_id': chat_id, 'text': text, 'parse_mode': 'HTML'}
     if reply_to_message_id:
         payload['reply_to_message_id'] = reply_to_message_id
     if reply_markup:
         payload['reply_markup'] = reply_markup
-    r = requests.post(url, json=payload)
-    return r
+    r = asyncio.create_task(post_json(url, payload))
+    return await r
 
-def deleteMessage(chat_id, message_id):
+async def deleteMessage(chat_id, message_id):
     """
     Parameters:
     ----------
@@ -110,10 +117,10 @@ def deleteMessage(chat_id, message_id):
     """
     url = f"{base_link}/deleteMessage"
     payload = {'chat_id': chat_id, 'message_id': message_id}
-    r = requests.post(url, json=payload)
-    return r
+    r = asyncio.create_task(post_json(url, payload))
+    return await r
 
-def editMessageText(chat_id, message_id, text, reply_markup=None):
+async def editMessageText(chat_id, message_id, text, reply_markup=None):
     """
     Parameters:
     ----------
@@ -125,10 +132,10 @@ def editMessageText(chat_id, message_id, text, reply_markup=None):
     Return:
         Request response
     """
-    sendChatAction(chat_id, action='typing')
+    asyncio.create_task(sendChatAction(chat_id, action='typing'))
     url = f"{base_link}/editMessageText"
     payload = {'chat_id': chat_id, 'message_id': message_id, 'text': text, 'parse_mode': 'HTML'}
     if reply_markup:
         payload['reply_markup'] = reply_markup
-    r = requests.post(url, json=payload)
-    return r
+    r = asyncio.create_task(post_json(url, payload))
+    return await r
