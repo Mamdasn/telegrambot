@@ -20,8 +20,6 @@ COPY . .
 # Copy the Nginx configuration file
 COPY portforwarding.conf /etc/nginx/nginx.conf
 
-EXPOSE 443
-
 # Create a directory in the container to log the output of the code
 RUN mkdir -p /app/output
 RUN chmod +x nginx-setup.sh
