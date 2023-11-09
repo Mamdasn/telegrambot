@@ -53,7 +53,7 @@ def handle_message(chat_id, message_info):
 def handle_callback_query(chat_id, message_info):
     message_id, callback_query_data, callback_query_message_id = message_info
     command = callback_query_data                                        
-    queries, reply_markup = handle_commands(command)
+    reply, reply_markup = handle_commands(command)
     r = asyncio.run(
             send_message(
                         chat_id=chat_id,
