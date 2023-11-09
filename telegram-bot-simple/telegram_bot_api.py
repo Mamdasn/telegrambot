@@ -40,6 +40,39 @@ class Message:
     def message_info(self):
         return (self.message_text, self.message_id)
 
+    @property
+    def callback_query(self):
+        return self._getitem(self._message, 'callback_query')
+    @property
+    def callback_query_id(self):
+        return self._getitem(self.callback_query, 'id')
+    @property
+    def callback_query_data(self):
+        return self._getitem(self.callback_query, 'data')
+    @property
+    def callback_query_message(self):
+        return self._getitem(self.callback_query, 'message')
+    @property
+    def callback_query_message_id(self):
+        return self._getitem(self.callback_query_message, 'message_id')
+    @property
+    def callback_query_message_chat(self):
+        return self._getitem(self.callback_query_message, 'chat')
+    @property
+    def callback_query_message_chat_id(self):
+        return self._getitem(self.callback_query_message_chat, 'id')
+    @property
+    def callback_query_reply_to_message(self):
+        return self._getitem(self.callback_query_message, 'reply_to_message')
+    @property
+    def callback_query_reply_to_message_message_id(self):
+        return self._getitem(self.callback_query_reply_to_message, 'message_id')
+    @property
+    def callback_query_message_info(self):
+        return (seld.callback_query_reply_to_message_message_id,
+                       self.callback_query_data,
+                       self.callback_query_message_id)
+
 def parse_message(msg):
     """
     Parses a message object received from the Telegram API.
@@ -53,7 +86,9 @@ def parse_message(msg):
         message_type (str): 'private message' to indicate the type of the returned message.
     """
     msg = Message(msg)
-    if msg.chat_type == 'private': 
+    if msg.callback_query:
+        return msg.callback_query_message_chat_id, message_info, 'callback_query'
+    elif msg.chat_type == 'private': 
         return msg.chat_id, msg.message_info, 'private message'
 
 async def post_json(url, json_data):
