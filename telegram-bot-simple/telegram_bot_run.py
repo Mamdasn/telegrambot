@@ -17,27 +17,48 @@ def manage_messages(msg):
     parsed_message = parse_message(msg)
     if parsed_message:
         chat_id, message_info, chat_type = parsed_message
-        if chat_type == 'private message':
+        if chat_type == 'callback_query':
+            handle_callback_query(chat_id, message_info)
+        elif chat_type == 'private message':
             handle_message(chat_id, message_info)
 
 def handle_commands(message):
     reply = 'Send /start to start the bot.'
+    inline_keyboard = ''
     if message == '/start':
         reply = "I reply and you can't do anything about it!"
     elif message == "🌈":
         reply = "🍹"
-    return reply
+        inline_keyboard = {'inline_keyboard': [[{'text': 'request', 'callback_data': f'Clicked on request!'}], ]}
+    elif message == "Clicked on request!":
+        reply = "Request received!"
+    return reply, inline_keyboard
 
 def handle_message(chat_id, message_info):
     message, message_id = message_info
-    reply = handle_commands(message)
+    reply, inline_keyboard = handle_commands(message)
     keyboard = [["/start", "🌈"]]
-    reply_markup = {"keyboard": keyboard, "resize_keyboard": True}
+    keyboard = {"keyboard": keyboard, "resize_keyboard": True}
+    reply_markup = inline_keyboard if inline_keyboard else keyboard
     r = asyncio.run(
             send_message(
                         chat_id=chat_id,
                         text=reply,
                         reply_to_message_id=message_id,
+                        reply_markup=reply_markup
+            )
+        )
+    print('Sent response:', r)
+
+def handle_callback_query(chat_id, message_info):
+    message_id, callback_query_data, callback_query_message_id = message_info
+    command = callback_query_data                                        
+    queries, reply_markup = handle_commands(command)
+    r = asyncio.run(
+            send_message(
+                        chat_id=chat_id,
+                        text=reply,
+                        reply_to_message_id=callback_query_message_id,
                         reply_markup=reply_markup
             )
         )
