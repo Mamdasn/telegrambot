@@ -24,7 +24,6 @@ jobs:
         ssh -v -o UserKnownHostsFile=~/known_hosts \
             -i ~/id_rsa ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
                 "export TG_BOT_TOKEN=${{secrets.TG_BOT_TOKEN}} \
-                && export TELEGRAMBOT_IMAGE_BUILD=telegram-bot-simple:1.0.0 \
                 && export IP_ADDRESS=${{secrets.SSH_HOST}} \
                 && export SSL_PORT=${{secrets.SSL_PORT}} \
                 && cd telegrambot \
