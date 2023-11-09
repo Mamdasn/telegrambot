@@ -32,11 +32,11 @@ jobs:
         ssh -o UserKnownHostsFile=~/known_hosts \
             -i ~/id_rsa $SSH_USERNAME@$IP_ADDRESS \
                 "export BRANCH=main \
+                && export CONTAINER_DIR=telegrambot \
                 && export CONTAINER_NAME=telegram-bot-simple \
                 && SSL_PORT=${{secrets.SSL_PORT}} \
                 && TG_BOT_TOKEN=${{secrets.TG_BOT_TOKEN}} \
                 && IP_ADDRESS=${{secrets.SSH_HOST}} \
-                && export CONTAINER_DIR=telegrambot \
                 && cd $CONTAINER_DIR \
                 && git fetch --all \
                 && git switch $BRANCH \
