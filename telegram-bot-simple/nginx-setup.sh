@@ -13,11 +13,7 @@ WHITE_LISTED_IPS=$(echo "$IPLIST" | awk '{print "		allow " $0";"}')
 # Escape forward slashes and replace newlines with '\n' to prepare the data for sed
 WHITE_LISTED_IPS_ESCAPED=$(echo "$WHITE_LISTED_IPS" | sed 's#/#\\/#g' | awk '{printf "%s\\n", $0}')
 
-[ -z $SSL_PORT ] && 
-	export SSL_PORT=443
 echo
 echo Setting up the white listed IPs in the nginx configuration file
-sed -i "s#SSL_PORT#$SSL_PORT#g" /etc/nginx/nginx.conf
 sed -i "s#WHITE_LISTED_IPS#$WHITE_LISTED_IPS_ESCAPED#g" /etc/nginx/nginx.conf
 echo Done.
-
