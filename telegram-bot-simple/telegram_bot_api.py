@@ -69,10 +69,10 @@ class Message:
         return self._getitem(self.callback_query_reply_to_message, 'message_id')
     @property
     def callback_query_message_info(self):
-        return (self.callback_query_reply_to_message_message_id,
-                       self.callback_query_data,
-                       self.callback_query_message_id)
-
+        return (self.callback_query_id, 
+                self.callback_query_reply_to_message_message_id,
+                self.callback_query_data,
+                self.callback_query_message_id)
 def parse_message(msg):
     """
     Parses a message object received from the Telegram API.
@@ -172,5 +172,11 @@ async def editMessageText(chat_id, message_id, text, reply_markup=None):
     payload = {'chat_id': chat_id, 'message_id': message_id, 'text': text, 'parse_mode': 'HTML'}
     if reply_markup:
         payload['reply_markup'] = reply_markup
+    r = asyncio.create_task(post_json(url, payload))
+    return await r
+
+async def answerInlineQuery(inline_query_id, results):
+    url = f"{base_link}/answerInlineQuery"
+    payload = {'inline_query_id': inline_query_id, 'results': results, 'cache_time': 200}
     r = asyncio.create_task(post_json(url, payload))
     return await r
