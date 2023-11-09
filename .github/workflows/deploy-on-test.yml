@@ -31,12 +31,12 @@ jobs:
         ssh-keyscan -t rsa $IP_ADDRESS >> ~/known_hosts
         ssh -o UserKnownHostsFile=~/known_hosts \
             -i ~/id_rsa $SSH_USERNAME@$IP_ADDRESS \
-                "export BRANCH=main \
-                && export CONTAINER_DIR=telegrambot \
-                && export CONTAINER_NAME=telegram-bot-simple \
-                && export SSL_PORT=${{secrets.SSL_PORT}} \
-                && export TG_BOT_TOKEN=${{secrets.TG_BOT_TOKEN}} \
-                && export IP_ADDRESS=${{secrets.SSH_HOST}} \
+                "export BRANCH=${{env.BRANCH}} \
+                && export CONTAINER_DIR=${{env.CONTAINER_DIR}} \
+                && export CONTAINER_NAME=${{env.CONTAINER_NAME}} \
+                && export SSL_PORT=${{env.SSL_PORT}} \
+                && export TG_BOT_TOKEN=${{env.TG_BOT_TOKEN}} \
+                && export IP_ADDRESS=${{env.IP_ADDRESS}} \
                 && cd $CONTAINER_DIR \
                 && git fetch --all \
                 && git switch $BRANCH \
