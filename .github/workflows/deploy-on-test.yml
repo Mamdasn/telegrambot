@@ -44,4 +44,4 @@ jobs:
                 && docker compose down \
                 && docker system prune -af \
                 && docker compose up -d \
-                && docker ps -q --filter name=^${CONTAINER_NAME}$ | grep -q ."
+                && docker ps -q --filter name=^${CONTAINER_NAME}1$ | grep -q ."
