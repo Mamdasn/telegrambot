@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z SSL_PORT] && 
+[ -z $SSL_PORT] &&
 	export SSL_PORT=443
 
 [ -z $IP_ADDRESS ] &&
@@ -10,6 +10,7 @@
 	echo set the TG_BOT_TOKEN by running: export TG_BOT_TOKEN={TG_BOT_TOKEN}. &&
 		return
 
+echo SSL_PORT: $SSL_PORT
 echo IP_ADDRESS: $IP_ADDRESS
 echo TG_BOT_TOKEN: $TG_BOT_TOKEN
 
