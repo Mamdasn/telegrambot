@@ -4,7 +4,8 @@ from flask import request, abort
 from telegram_bot_api import parse_message, \
                                 send_message, \
                                 deleteMessage, \
-                                editMessageText
+                                editMessageText, \
+                                answerInlineQuery
 from credentials import config
 import asyncio
 import json
@@ -51,9 +52,11 @@ def handle_message(chat_id, message_info):
     print('Sent response:', r)
 
 def handle_callback_query(chat_id, message_info):
-    message_id, callback_query_data, callback_query_message_id = message_info
+    callback_query_id, message_id, callback_query_data, callback_query_message_id = message_info
     command = callback_query_data                                        
     reply, reply_markup = handle_commands(command)
+    
+    asyncio.run(answerInlineQuery(callback_query_id, text="request is replied!"))
     r = asyncio.run(
             send_message(
                         chat_id=chat_id,
