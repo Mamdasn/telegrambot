@@ -69,7 +69,7 @@ class Message:
         return self._getitem(self.callback_query_reply_to_message, 'message_id')
     @property
     def callback_query_message_info(self):
-        return (seld.callback_query_reply_to_message_message_id,
+        return (self.callback_query_reply_to_message_message_id,
                        self.callback_query_data,
                        self.callback_query_message_id)
 
