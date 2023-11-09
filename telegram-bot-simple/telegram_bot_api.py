@@ -87,7 +87,7 @@ def parse_message(msg):
     """
     msg = Message(msg)
     if msg.callback_query:
-        return msg.callback_query_message_chat_id, message_info, 'callback_query'
+        return msg.callback_query_message_chat_id, msg.callback_query_message_info, 'callback_query'
     elif msg.chat_type == 'private': 
         return msg.chat_id, msg.message_info, 'private message'
 
