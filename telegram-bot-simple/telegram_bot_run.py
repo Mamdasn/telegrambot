@@ -5,7 +5,7 @@ from telegram_bot_api import parse_message, \
                                 send_message, \
                                 deleteMessage, \
                                 editMessageText, \
-                                answerInlineQuery
+                                answerCallbackQuery
 from credentials import config
 import asyncio
 import json
@@ -56,7 +56,7 @@ def handle_callback_query(chat_id, message_info):
     command = callback_query_data                                        
     reply, reply_markup = handle_commands(command)
     
-    asyncio.run(answerInlineQuery(callback_query_id, text="request is replied!"))
+    asyncio.run(answerCallbackQuery(callback_query_id, text="request is replied!"))
     r = asyncio.run(
             send_message(
                         chat_id=chat_id,

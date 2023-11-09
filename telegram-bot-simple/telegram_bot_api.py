@@ -175,8 +175,8 @@ async def editMessageText(chat_id, message_id, text, reply_markup=None):
     r = asyncio.create_task(post_json(url, payload))
     return await r
 
-async def answerInlineQuery(inline_query_id, results):
-    url = f"{base_link}/answerInlineQuery"
-    payload = {'inline_query_id': inline_query_id, 'results': results, 'cache_time': 200}
+async def answerCallbackQuery(callback_query_id, text):
+    url = f"{base_link}/answerCallbackQuery"
+    payload = {'callback_query_id': callback_query_id, 'text': text}
     r = asyncio.create_task(post_json(url, payload))
     return await r
