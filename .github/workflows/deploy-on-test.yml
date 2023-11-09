@@ -34,9 +34,9 @@ jobs:
                 "export BRANCH=main \
                 && export CONTAINER_DIR=telegrambot \
                 && export CONTAINER_NAME=telegram-bot-simple \
-                && SSL_PORT=${{secrets.SSL_PORT}} \
-                && TG_BOT_TOKEN=${{secrets.TG_BOT_TOKEN}} \
-                && IP_ADDRESS=${{secrets.SSH_HOST}} \
+                && export SSL_PORT=${{secrets.SSL_PORT}} \
+                && export TG_BOT_TOKEN=${{secrets.TG_BOT_TOKEN}} \
+                && export IP_ADDRESS=${{secrets.SSH_HOST}} \
                 && cd $CONTAINER_DIR \
                 && git fetch --all \
                 && git switch $BRANCH \
