@@ -48,8 +48,8 @@ def handle_message(chat_id, message_info):
     message, message_id = message_info
     reply, inline_keyboard = handle_commands(message)
     keyboard = [["/start", "🌈"]]
-    keyboard = {"keyboard": keyboard, "resize_keyboard": True}
-    reply_markup = inline_keyboard if inline_keyboard else keyboard
+    reply_keyboard = {"keyboard": keyboard, "resize_keyboard": True}
+    reply_markup = inline_keyboard if inline_keyboard else reply_keyboard
     r = asyncio.run(
         send_message(
             chat_id=chat_id,
