@@ -158,7 +158,7 @@ async def send_message(chat_id, text, reply_to_message_id=None, reply_markup=Non
         Request response
     """
 
-    asyncio.create_task(sendChatAction(chat_id, action="typing"))
+    await asyncio.create_task(sendChatAction(chat_id, action="typing"))
     url = f"{base_link}/sendMessage"
     payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
     if reply_to_message_id:
@@ -199,7 +199,7 @@ async def editMessageText(chat_id, message_id, text, reply_markup=None):
     Return:
         Request response
     """
-    asyncio.create_task(sendChatAction(chat_id, action="typing"))
+    await asyncio.create_task(sendChatAction(chat_id, action="typing"))
     url = f"{base_link}/editMessageText"
     payload = {
         "chat_id": chat_id,
