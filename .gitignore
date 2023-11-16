@@ -1,6 +1,4 @@
-# Sphinx documentation build output
 # Sphinx documentation build directories
-docs/_build/
 docs/build/
 docs/_static/
 docs/_templates/
