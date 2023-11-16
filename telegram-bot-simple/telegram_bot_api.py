@@ -7,7 +7,41 @@ base_link = f"https://api.telegram.org/bot{token}"
 
 
 class Message:
+    """
+    A class to represent and process a message object.
+
+    This class provides methods to extract various pieces of information from
+    a message dictionary, typically received from an API like Telegram.
+
+    Attributes:
+        _message (dict): The original message dictionary.
+
+    Methods:
+        message: Retrieves the main message content.
+        chat: Retrieves chat information from the message.
+        chat_id: Retrieves the unique chat ID.
+        chat_type: Retrieves the type of chat (e.g., private, group).
+        message_id: Retrieves the ID of the message.
+        message_text: Retrieves the text of the message.
+        message_info: Retrieves a tuple with text and ID of the message.
+        callback_query: Retrieves callback query information.
+        callback_query_id: Retrieves the callback query ID.
+        callback_query_data: Retrieves the callback query data.
+        callback_query_message: Retrieves the message related to the callback query.
+        callback_query_message_id: Retrieves the message ID of the callback query.
+        callback_query_message_chat: Retrieves chat information of the callback query message.
+        callback_query_message_chat_id: Retrieves the chat ID of the callback query message.
+        callback_query_reply_to_message: Retrieves the original message to which the callback query is replying.
+        callback_query_reply_to_message_message_id: Retrieves the message ID of the original message in the callback query.
+        callback_query_message_info: Retrieves a tuple with detailed info of the callback query message.
+    """
     def __init__(self, message: dict):
+        """
+        Initializes the Message object with a message dictionary.
+
+        Args:
+            message (dict): A dictionary representing a message.
+        """
         self._message = message
 
     @staticmethod
@@ -100,13 +134,13 @@ def parse_message(msg):
     """
     Parses a message object received from the Telegram API.
 
+    Analyzes the message to extract various components like chat ID and message information. Differentiates between normal messages and callback queries.
+
     Args:
         msg (dict): A dictionary representing a Telegram message.
 
     Returns:
-        chat_id (int): The ID of the chat the message was sent in.
-        message_info (list): A list containing information about the message.
-        message_type (str): 'private message' to indicate the type of the returned message.
+        tuple: A tuple containing the chat ID, message information, and message type.
     """
     msg = Message(msg)
     if msg.callback_query:
@@ -120,6 +154,18 @@ def parse_message(msg):
 
 
 async def post_json(url, json_data):
+    """
+    Asynchronously sends a POST request with JSON data.
+
+    This function is a utility to send asynchronous POST requests to a specified URL with JSON-formatted data.
+
+    Args:
+        url (str): The URL to which the request is to be sent.
+        json_data (dict): The JSON data to be sent in the POST request.
+
+    Returns:
+        str: The text response of the request.
+    """
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=json_data) as response:
             return await response.text()
@@ -127,15 +173,16 @@ async def post_json(url, json_data):
 
 async def sendChatAction(chat_id, action="typing"):
     """
-    Parameters:
-    ----------
-    chat_id (str):
-        Unique identifier for the target chat or username of the target channel
-    action (str):
-        Type of action to broadcast. Choose one, depending on what the user is about to receive: typing for text messages, upload_photo for photos, record_video or upload_video for videos, record_voice or upload_voice for voice notes, upload_document for general files, choose_sticker for stickers, find_location for location data, record_video_note or upload_video_note for video notes.
-    ----------
-    Return:
-        Request response
+    Asynchronously sends a chat action to a Telegram chat.
+
+    This function is used to send various chat actions to inform users in a chat about the ongoing activity (e.g., typing, uploading a photo).
+
+    Args:
+        chat_id (str): Unique identifier for the target chat or username of the target channel.
+        action (str): Type of action to broadcast (e.g., 'typing', 'upload_photo').
+
+    Returns:
+        str: The text response of the request.
     """
     url = f"{base_link}/sendChatAction"
     payload = {"chat_id": chat_id, "action": action}
@@ -145,17 +192,18 @@ async def sendChatAction(chat_id, action="typing"):
 
 async def send_message(chat_id, text, reply_to_message_id=None, reply_markup=None):
     """
-    Parameters:
-    ----------
-    chat_id (str):
-        Unique identifier for the target chat or username of the target channel
-    reply_to_message_id (str):
-        If the message is a reply, ID of the original message
-    reply_markup (str):
-        Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove reply keyboard or to force a reply from the user.
-    ----------
-    Return:
-        Request response
+    Asynchronously sends a message to a Telegram chat.
+
+    This function allows sending a text message to a specified chat in Telegram. Additional parameters allow specifying a reply and custom keyboards.
+
+    Args:
+        chat_id (str): Unique identifier for the target chat or username of the target channel.
+        text (str): The text of the message to be sent.
+        reply_to_message_id (str, optional): If the message is a reply, ID of the original message.
+        reply_markup (str, optional): Additional interface options in JSON-serialized format.
+
+    Returns:
+        str: The text response of the request.
     """
 
     await asyncio.create_task(sendChatAction(chat_id, action="typing"))
@@ -171,15 +219,16 @@ async def send_message(chat_id, text, reply_to_message_id=None, reply_markup=Non
 
 async def deleteMessage(chat_id, message_id):
     """
-    Parameters:
-    ----------
-    chat_id (str):
-        Unique identifier for the target chat or username of the target channel
-    message_id (str):
-        Identifier of the message to delete
-    ----------
-    Return:
-        Request response
+    Asynchronously deletes a message from a Telegram chat.
+
+    This function is used to delete a message in a Telegram chat based on its unique message ID.
+
+    Args:
+        chat_id (str): Unique identifier for the target chat or username of the target channel.
+        message_id (str): Identifier of the message to delete.
+
+    Returns:
+        str: The text response of the request.
     """
     url = f"{base_link}/deleteMessage"
     payload = {"chat_id": chat_id, "message_id": message_id}
@@ -189,16 +238,20 @@ async def deleteMessage(chat_id, message_id):
 
 async def editMessageText(chat_id, message_id, text, reply_markup=None):
     """
-    Parameters:
-    ----------
-    chat_id (str):
-        Unique identifier for the target chat or username of the target channel
-    message_id (str):
-        Required if inline_message_id is not specified. Identifier of the message to edit
-    ----------
-    Return:
-        Request response
+    Asynchronously edits the text of a message in a Telegram chat.
+
+    This function allows editing the text of an existing message in a Telegram chat. It requires the message ID and the new text. Optionally, it can also update the reply markup.
+
+    Args:
+        chat_id (str): Unique identifier for the target chat or username of the target channel.
+        message_id (str): Identifier of the message to edit.
+        text (str): New text to replace the existing message content.
+        reply_markup (str, optional): Additional interface options in JSON-serialized format.
+
+    Returns:
+        str: The text response of the request.
     """
+
     await asyncio.create_task(sendChatAction(chat_id, action="typing"))
     url = f"{base_link}/editMessageText"
     payload = {
@@ -214,6 +267,18 @@ async def editMessageText(chat_id, message_id, text, reply_markup=None):
 
 
 async def answerCallbackQuery(callback_query_id, text):
+    """
+    Asynchronously sends a response to a callback query in Telegram.
+
+    This function is used to provide feedback to a user who initiated a callback query in a Telegram bot interaction.
+
+    Args:
+        callback_query_id (str): Unique identifier for the callback query.
+        text (str): Text of the notification to be shown to the user.
+
+    Returns:
+        str: The text response of the request.
+    """
     url = f"{base_link}/answerCallbackQuery"
     payload = {"callback_query_id": callback_query_id, "text": text}
     r = asyncio.create_task(post_json(url, payload))
