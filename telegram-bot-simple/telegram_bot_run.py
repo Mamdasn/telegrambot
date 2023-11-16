@@ -18,6 +18,15 @@ app = Flask(__name__)
 
 
 def manage_messages(msg):
+    """
+    Processes incoming messages and dispatches them based on message type.
+
+    This function acts as a router, directing messages to the appropriate handler 
+    based on whether it's a callback query or a private message.
+
+    Args:
+        msg (dict): A dictionary representing a message received from the Telegram API.
+    """
     parsed_message = parse_message(msg)
     if parsed_message:
         chat_id, message_info, chat_type = parsed_message
@@ -28,6 +37,19 @@ def manage_messages(msg):
 
 
 def handle_commands(message):
+    """
+    Processes and responds to specific commands or inputs.
+
+    Based on the input message, this function generates a reply and, if necessary, an 
+    inline keyboard structure for interactive responses in Telegram.
+
+    Args:
+        message (str): The text of the received message or command.
+
+    Returns:
+        tuple: A tuple containing the reply message (str) and the inline keyboard 
+               structure (dict) if applicable, otherwise an empty string.
+    """
     reply = "Send /start to start the bot."
     inline_keyboard = ""
     if message == "/start":
@@ -45,6 +67,19 @@ def handle_commands(message):
 
 
 def handle_message(chat_id, message_info):
+    """
+    Handles a standard message received in a private chat.
+
+    Extracts message content and ID from `message_info`, processes it through `handle_commands`,
+    and then sends an appropriate response back to the user in the chat.
+
+    Args:
+        chat_id (str): Unique identifier for the target chat.
+        message_info (tuple): A tuple containing the message text and message ID.
+
+    Returns:
+        None
+    """
     message, message_id = message_info
     reply, inline_keyboard = handle_commands(message)
     keyboard = [["/start", "🌈"]]
@@ -62,6 +97,20 @@ def handle_message(chat_id, message_info):
 
 
 def handle_callback_query(chat_id, message_info):
+    """
+    Handles a callback query triggered by an inline keyboard in Telegram.
+
+    Processes the callback query data, sends a notification of receipt, and responds with a message
+    based on the content of the callback query.
+
+    Args:
+        chat_id (str): Unique identifier for the target chat.
+        message_info (tuple): A tuple containing the callback query ID, the original message ID,
+                              the callback query data, and the callback query message ID.
+
+    Returns:
+        None
+    """
     (
         callback_query_id,
         message_id,
