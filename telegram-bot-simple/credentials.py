@@ -15,4 +15,4 @@ class config:
                             This token is used to authenticate and interact with the Telegram Bot API.
     """
 
-    TG_BOT_TOKEN = os.environ["TG_BOT_TOKEN"]
+    TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "PLACE HOLDER")
