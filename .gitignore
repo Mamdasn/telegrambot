@@ -3,6 +3,9 @@ docs/build/
 docs/_static/
 docs/_templates/
 
+# Sphinx documentation
+docs/_build/
+
 # Sphinx cache directory
 docs/.doctrees/
 
