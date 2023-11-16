@@ -1,5 +1,6 @@
 import os
 
+
 class config:
     """
     A configuration class for storing environment-specific settings.
@@ -13,4 +14,5 @@ class config:
         TG_BOT_TOKEN (str): Telegram Bot Token, fetched from the environment variable 'TG_BOT_TOKEN'.
                             This token is used to authenticate and interact with the Telegram Bot API.
     """
+
     TG_BOT_TOKEN = os.environ["TG_BOT_TOKEN"]
