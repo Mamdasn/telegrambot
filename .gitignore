@@ -1,13 +1,6 @@
-# Sphinx documentation build directories
-docs/build/
-docs/_static/
-docs/_templates/
-
-# Sphinx documentation
-docs/_build/
-
 # Sphinx cache directory
-docs/.doctrees/
+**/.buildinfo/
+**/.doctrees/
 
 # Sphinx temporary files
 docs/*.tmp
