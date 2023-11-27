@@ -15,7 +15,7 @@ jobs:
           path: 'main_repo'
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.9'  # Set your Python version here
 
@@ -25,8 +25,11 @@ jobs:
           pip install sphinx
 
       - name: Build Documentation
+        env:
+          REPO: telegram-bot-simple
         run: |
           cd main_repo
+          pip install -r ${{env.REPO}}/requirements.txt
           sphinx-build -b html docs/source docs/build
 
       - name: Checkout Documentation Branch
