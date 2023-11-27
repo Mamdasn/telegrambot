@@ -49,6 +49,11 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Update documentation"
-          git push origin gh-pages
+          if git diff --cached --quiet; then
+              echo "No changes to commit. Skipping git push."
+          else
+              # Commit and push if there are staged changes
+              git commit -m "Update documentation"
+              git push origin gh-pages
+          fi
 
