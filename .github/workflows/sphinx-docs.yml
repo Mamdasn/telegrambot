@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Main Branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: 'main_repo'
 
@@ -30,7 +30,7 @@ jobs:
           sphinx-build -b html docs/source docs/build
 
       - name: Checkout Documentation Branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: 'documentation'
           path: 'documentation_repo'
