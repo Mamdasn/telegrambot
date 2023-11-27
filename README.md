@@ -7,4 +7,4 @@ First you should have access to a VPS. You can order it for cheap online. Make s
 To run the Telegram bot container, make sure you have already installed docker and docker-compose on your device. There you go, now you should have a fully functional Telegram bot running in a docker container.
 
 ## Documentation
-To refer to documentation click [HERE](/docs/_build/html/index.html)
+To refer to documentation go [HERE](https://mamdasn.github.io/telegrambot/)
