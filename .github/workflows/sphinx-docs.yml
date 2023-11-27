@@ -26,6 +26,7 @@ jobs:
 
       - name: Build Documentation
         run: |
+          cd main_repo
           sphinx-build -b html docs/source docs/build
 
       - name: Checkout Documentation Branch
