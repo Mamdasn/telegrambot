@@ -35,19 +35,19 @@ jobs:
       - name: Checkout Documentation Branch
         uses: actions/checkout@v3
         with:
-          ref: 'documentation'
-          path: 'documentation_repo'
+          ref: 'gh-pages'
+          path: 'gh_pages_repo'
 
       - name: Copy Documentation Htmls to Documentation Branch
         run: |
-          cp -r main_repo/docs/build/* documentation_repo/
+          cp -r main_repo/docs/build/* gh_pages_repo/
       
       - name: Commit and Push Changes
         run: |
-          cd documentation_repo
+          cd gh_pages_repo
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add .
           git commit -m "Update documentation"
-          git push origin documentation
+          git push origin gh-pages
 
