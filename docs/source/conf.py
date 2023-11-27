@@ -6,9 +6,10 @@
 import sys
 import os
 
-# The parent dir of this current dir is the root dir
+# The 2nd parent dir of this current dir is the root dir
 cwd = os.getcwd()
-project_root = os.path.dirname(cwd)
+# going two dirs back to reach the root dir
+project_root = os.path.dirname(os.path.dirname(cwd))
 
 py_root = os.path.join(project_root, "telegram-bot-simple")
 
