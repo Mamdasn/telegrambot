@@ -1,7 +1,5 @@
+from flask import Flask, request
 from flask.wrappers import Response
-from flask import Flask
-from flask import request, abort
-
 from incoming_message_handler import manage_messages
 
 app = Flask(__name__)
