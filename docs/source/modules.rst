@@ -15,4 +15,3 @@ Credentials Module
 
 .. automodule:: credentials
    :members:
-
