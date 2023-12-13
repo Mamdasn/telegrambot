@@ -1,13 +1,12 @@
-from telegram_bot_api import (
+import asyncio
+
+from telegram_bot_api import (  # deleteMessage,; editMessageText,
+    answerCallbackQuery,
     parse_message,
     send_message,
-    deleteMessage,
-    editMessageText,
-    answerCallbackQuery,
 )
 
-import asyncio
-import json
+# import json
 
 
 def manage_messages(msg):
@@ -51,7 +50,7 @@ def handle_commands(message):
         reply = "🍹"
         inline_keyboard = {
             "inline_keyboard": [
-                [{"text": "request", "callback_data": f"Clicked on request!"}],
+                [{"text": "request", "callback_data": "Clicked on request!"}],
             ]
         }
     elif message == "Clicked on request!":
