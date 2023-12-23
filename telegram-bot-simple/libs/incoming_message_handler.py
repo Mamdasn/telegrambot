@@ -1,6 +1,6 @@
 import asyncio
 
-from telegram_bot_api import (  # deleteMessage,; editMessageText,
+from .telegram_bot_api import (  # deleteMessage,; editMessageText,
     answerCallbackQuery,
     parse_message,
     send_message,
