@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask.wrappers import Response
-from incoming_message_handler import manage_messages
+from libs.incoming_message_handler import manage_messages
 
 app = Flask(__name__)
 
