@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'telegram-bot-simple/libs/**'
 
 jobs:
   update-docs:
