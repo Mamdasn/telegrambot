@@ -62,7 +62,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#libs.telegram_bot_api.setMessageReaction"><code class="docutils literal notranslate"><span class="pre">setMessageReaction()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#handle-incoming-messages-module">Handle Incoming Messages Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-libs.incoming_message_handler">Handle Incoming Messages Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#libs.incoming_message_handler.manage_messages"><code class="docutils literal notranslate"><span class="pre">manage_messages()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#libs.incoming_message_handler.handle_commands"><code class="docutils literal notranslate"><span class="pre">handle_commands()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#libs.incoming_message_handler.handle_message"><code class="docutils literal notranslate"><span class="pre">handle_message()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#libs.incoming_message_handler.handle_callback_query"><code class="docutils literal notranslate"><span class="pre">handle_callback_query()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="#module-libs.credentials">Credentials Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#libs.credentials.config"><code class="docutils literal notranslate"><span class="pre">config</span></code></a></li>
 </ul>
@@ -259,8 +265,72 @@ a message dictionary, typically received from an API like Telegram.</p>
 </dd></dl>
 
 </section>
-<section id="handle-incoming-messages-module">
-<h1>Handle Incoming Messages Module<a class="headerlink" href="#handle-incoming-messages-module" title="Link to this heading"></a></h1>
+<section id="module-libs.incoming_message_handler">
+<span id="handle-incoming-messages-module"></span><h1>Handle Incoming Messages Module<a class="headerlink" href="#module-libs.incoming_message_handler" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="libs.incoming_message_handler.manage_messages">
+<span class="sig-prename descclassname"><span class="pre">libs.incoming_message_handler.</span></span><span class="sig-name descname"><span class="pre">manage_messages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/libs/incoming_message_handler.html#manage_messages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#libs.incoming_message_handler.manage_messages" title="Link to this definition"></a></dt>
+<dd><p>Processes incoming messages and dispatches them based on message type.</p>
+<p>This function acts as a router, directing messages to the appropriate handler
+based on whether it’s a callback query or a private message.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>msg (dict): A dictionary representing a message received from the Telegram API.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="libs.incoming_message_handler.handle_commands">
+<span class="sig-prename descclassname"><span class="pre">libs.incoming_message_handler.</span></span><span class="sig-name descname"><span class="pre">handle_commands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/libs/incoming_message_handler.html#handle_commands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#libs.incoming_message_handler.handle_commands" title="Link to this definition"></a></dt>
+<dd><p>Processes and responds to specific commands or inputs.</p>
+<p>Based on the input message, this function generates a reply and, if necessary, an
+inline keyboard structure for interactive responses in Telegram.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>message (str): The text of the received message or command.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>tuple: A tuple containing the reply message (str) and the inline keyboard</dt><dd><p>structure (dict) if applicable, otherwise an empty string.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="libs.incoming_message_handler.handle_message">
+<span class="sig-prename descclassname"><span class="pre">libs.incoming_message_handler.</span></span><span class="sig-name descname"><span class="pre">handle_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chat_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/libs/incoming_message_handler.html#handle_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#libs.incoming_message_handler.handle_message" title="Link to this definition"></a></dt>
+<dd><p>Handles a standard message received in a private chat.</p>
+<p>Extracts message content and ID from <cite>message_info</cite>, processes it through <cite>handle_commands</cite>,
+and then sends an appropriate response back to the user in the chat.</p>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">chat_id (str): Unique identifier for the target chat.</div>
+<div class="line">message_info (tuple): A tuple containing the message text and message ID.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="libs.incoming_message_handler.handle_callback_query">
+<span class="sig-prename descclassname"><span class="pre">libs.incoming_message_handler.</span></span><span class="sig-name descname"><span class="pre">handle_callback_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chat_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/libs/incoming_message_handler.html#handle_callback_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#libs.incoming_message_handler.handle_callback_query" title="Link to this definition"></a></dt>
+<dd><p>Handles a callback query triggered by an inline keyboard in Telegram.</p>
+<p>Processes the callback query data, sends a notification of receipt, and responds with a message
+based on the content of the callback query.</p>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">chat_id (str): Unique identifier for the target chat.</div>
+<div class="line">message_info (tuple): A tuple containing the callback query ID,
+the original message ID, the callback query data, and the callback query message ID.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-libs.credentials">
 <span id="credentials-module"></span><h1>Credentials Module<a class="headerlink" href="#module-libs.credentials" title="Link to this heading"></a></h1>
