@@ -79,6 +79,7 @@
              
   <h1>Source code for libs.incoming_message_handler</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span> <span class="k">as</span> <span class="n">pick_randomly</span>
 
 <span class="kn">from</span> <span class="nn">.telegram_bot_api</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># deleteMessage,; editMessageText,; setMessageReaction,</span>
     <span class="n">answerCallbackQuery</span><span class="p">,</span>
@@ -164,7 +165,82 @@
     <span class="n">message</span><span class="p">,</span> <span class="n">message_id</span> <span class="o">=</span> <span class="n">message_info</span>
     <span class="n">reply</span><span class="p">,</span> <span class="n">inline_keyboard</span> <span class="o">=</span> <span class="n">handle_commands</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-    <span class="n">reaction</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;emoji&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="s2">&quot;👍&quot;</span><span class="p">}]</span>
+    <span class="n">emojies</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;👍&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;👎&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;❤&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🔥&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🥰&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;👏&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😁&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤔&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤯&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😱&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤬&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😢&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🎉&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤩&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤮&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;💩&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🙏&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;👌&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🕊&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤡&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🥱&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🥴&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😍&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🐳&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;❤‍🔥&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🌚&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🌭&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;💯&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤣&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;⚡&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🍌&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🏆&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;💔&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤨&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😐&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🍓&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🍾&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;💋&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🖕&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😈&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😴&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😭&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤓&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;👻&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;👨‍💻&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;👀&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🎃&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🙈&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😇&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😨&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤝&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;✍&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤗&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🫡&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🎅&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🎄&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;☃&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;💅&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤪&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🗿&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🆒&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;💘&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🙉&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🦄&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😘&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;💊&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🙊&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😎&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;👾&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤷‍♂&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤷&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;🤷‍♀&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;😡&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">reaction</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;emoji&quot;</span><span class="p">,</span> <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="n">pick_randomly</span><span class="p">(</span><span class="n">emojies</span><span class="p">)}]</span>
     <span class="n">is_big</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">setMessageReaction</span><span class="p">(</span><span class="n">chat_id</span><span class="p">,</span> <span class="n">message_id</span><span class="p">,</span> <span class="n">reaction</span><span class="p">,</span> <span class="n">is_big</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;React response:&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
