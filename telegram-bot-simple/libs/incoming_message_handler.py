@@ -1,10 +1,9 @@
 import asyncio
 
-from .telegram_bot_api import (  # deleteMessage,; editMessageText,
+from .telegram_bot_api import (  # deleteMessage,; editMessageText,; setMessageReaction,
     answerCallbackQuery,
     parse_message,
     send_message,
-    setMessageReaction,
 )
 
 # import json
@@ -78,13 +77,13 @@ def handle_message(chat_id, message_info):
     keyboard = [["/start", "🌈"]]
     reply_keyboard = {"keyboard": keyboard, "resize_keyboard": True}
     reply_markup = inline_keyboard if inline_keyboard else reply_keyboard
-    await asyncio.run(
-        setMessageReaction(
-            chat_id=chat_id,
-            message_id=message_id,
-            reaction={"type": "emoji", "emoji": "👍"},
-        )
-    )
+    # await asyncio.run(
+    #    setMessageReaction(
+    #        chat_id=chat_id,
+    #        message_id=message_id,
+    #        reaction={"type": "emoji", "emoji": "👍"},
+    #    )
+    # )
 
     r = asyncio.run(
         send_message(
