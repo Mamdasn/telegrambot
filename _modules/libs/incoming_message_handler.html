@@ -245,7 +245,16 @@
     <span class="n">r</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">setMessageReaction</span><span class="p">(</span><span class="n">chat_id</span><span class="p">,</span> <span class="n">message_id</span><span class="p">,</span> <span class="n">reaction</span><span class="p">,</span> <span class="n">is_big</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;React response:&quot;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
 
-    <span class="n">keyboard</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;/start&quot;</span><span class="p">,</span> <span class="s2">&quot;🌈&quot;</span><span class="p">]]</span>
+    <span class="n">keyboard</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;/start&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;🌈&quot;</span><span class="p">}],</span>
+        <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Source Code 📟&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;web_app&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/Mamdasn/telegrambot&quot;</span><span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+    <span class="p">]</span>
+
     <span class="n">reply_keyboard</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;keyboard&quot;</span><span class="p">:</span> <span class="n">keyboard</span><span class="p">,</span> <span class="s2">&quot;resize_keyboard&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
     <span class="n">reply_markup</span> <span class="o">=</span> <span class="n">inline_keyboard</span> <span class="k">if</span> <span class="n">inline_keyboard</span> <span class="k">else</span> <span class="n">reply_keyboard</span>
 
