@@ -157,7 +157,16 @@ def handle_message(chat_id, message_info):
     r = asyncio.run(setMessageReaction(chat_id, message_id, reaction, is_big))
     print("React response:", r)
 
-    keyboard = [["/start", "🌈"]]
+    keyboard = [
+        [{"text": "/start"}, {"text": "🌈"}],
+        [
+            {
+                "text": "Source Code 📟",
+                "web_app": {"url": "https://github.com/Mamdasn/telegrambot"},
+            }
+        ],
+    ]
+
     reply_keyboard = {"keyboard": keyboard, "resize_keyboard": True}
     reply_markup = inline_keyboard if inline_keyboard else reply_keyboard
 
