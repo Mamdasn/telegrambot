@@ -10,41 +10,46 @@ base_link = f"https://api.telegram.org/bot{token}"
 
 class Message:
     """
-    A class to represent and process a message object.
+    A class to represent and process a Telegram message.
 
-    This class provides methods to extract various pieces of information from
-    a message dictionary, typically received from an API like Telegram.
+    This class provides a structured way to access various components of a message received in Telegram. It uses properties to access specific parts of the message, such as text, chat information, callback queries, and more.
 
     Attributes:
-        _message (dict): The original message dictionary.
+        _message (dict): The original message dictionary received from Telegram.
+
+    The class provides properties to access different elements of the message:
+        | - `message`: The main message content.
+        | - `chat`: Information about the chat.
+        | - `chat_id`: Unique identifier for the chat.
+        | - `chat_type`: Type of the chat (e.g., private, group).
+        | - `message_id`: Unique message identifier.
+        | - `message_text`: Text of the message.
+        | - `message_info`: Tuple containing message text and message ID.
+        | - `inline_query`: Inline query information, if any.
+        | - `query`: The inline query text.
+        | - `query_id`: Inline query identifier.
+        | - `callback_query`: Callback query information, if any.
+        | - `callback_query_id`: Callback query identifier.
+        | - `callback_query_data`: Data associated with the callback query.
+        | - `callback_query_message`: Message associated with the callback query.
+        | - `callback_query_message_id`: Message ID of the callback query message.
+        | - `callback_query_message_chat`: Chat information of the callback query message.
+        | - `callback_query_message_chat_id`: Chat ID of the callback query message.
+        | - `callback_query_reply_to_message`: Original message replied to by the callback query.
+        | - `callback_query_reply_to_message_message_id`: Message ID of the replied-to message.
+        | - `my_chat_member`: Information about changes in chat member status.
+        | - `my_chat_member_chat`: Chat information related to the chat member status change.
+        | - `my_chat_member_chat_title`: Title of the chat related to the chat member status change.
+        | - `my_chat_member_chat_type`: Type of the chat related to the chat member status change.
+        | - `my_chat_member_from`: User information of the member whose status in the chat has changed.
+        | - `my_chat_member_from_first_name`: First name of the user whose chat member status has changed.
+        | - `callback_query_message_info`: A tuple containing various pieces of information about the callback query message.
 
     Methods:
-        | message: Retrieves the main message content.
-        | chat: Retrieves chat information from the message.
-        | chat_id: Retrieves the unique chat ID.
-        | chat_type: Retrieves the type of chat (e.g., private, group).
-        | message_id: Retrieves the ID of the message.
-        | message_text: Retrieves the text of the message.
-        | message_info: Retrieves a tuple with text and ID of the message.
-        | callback_query: Retrieves callback query information.
-        | callback_query_id: Retrieves the callback query ID.
-        | callback_query_data: Retrieves the callback query data.
-        | callback_query_message: Retrieves the message related to the callback query.
-        | callback_query_message_id: Retrieves the message ID of the callback query.
-        | callback_query_message_chat: Retrieves chat information of the callback query message.
-        | callback_query_message_chat_id: Retrieves the chat ID of the callback query message.
-        | callback_query_reply_to_message: Retrieves the original message to which the callback query is replying.
-        | callback_query_reply_to_message_message_id: Retrieves the message ID of the original message in the callback query.
-        | callback_query_message_info: Retrieves a tuple with detailed info of the callback query message.
+        _getitem(dic, key): A static method to safely extract a nested value from a dictionary using a key or a tuple of nested keys.
     """
 
     def __init__(self, message: dict):
-        """
-        Initializes the Message object with a message dictionary.
-
-        Args:
-            message (dict): A dictionary representing a message.
-        """
         self._message = message
 
     @staticmethod
@@ -62,6 +67,10 @@ class Message:
         return self._getitem(self._message, "message")
 
     @property
+    def message_date(self):
+        return self._getitem(self.message, "date")
+
+    @property
     def chat(self):
         return self._getitem(self.message, "chat")
 
@@ -75,17 +84,27 @@ class Message:
 
     @property
     def message_id(self):
-        if self.chat_type == "private":
-            return self._getitem(self.message, "message_id")
+        return self._getitem(self.message, "message_id")
 
     @property
     def message_text(self):
-        if self.chat_type == "private":
-            return self._getitem(self.message, "text")
+        return self._getitem(self.message, "text")
 
     @property
     def message_info(self):
-        return (self.message_text, self.message_id)
+        return (self.message_text, self.message_id, self.message_date)
+
+    @property
+    def inline_query(self):
+        return self._getitem(self._message, "inline_query")
+
+    @property
+    def query(self):
+        return self._getitem(self.inline_query, "query")
+
+    @property
+    def query_id(self):
+        return self._getitem(self.inline_query, "id")
 
     @property
     def callback_query(self):
@@ -124,6 +143,30 @@ class Message:
         return self._getitem(self.callback_query_reply_to_message, "message_id")
 
     @property
+    def my_chat_member(self):
+        return self._getitem(self._message, "my_chat_member")
+
+    @property
+    def my_chat_member_chat(self):
+        return self._getitem(self.my_chat_member, "chat")
+
+    @property
+    def my_chat_member_chat_title(self):
+        return self._getitem(self.my_chat_member_chat, "title")
+
+    @property
+    def my_chat_member_chat_type(self):
+        return self._getitem(self.my_chat_member_chat, "type")
+
+    @property
+    def my_chat_member_from(self):
+        return self._getitem(self.my_chat_member, "from")
+
+    @property
+    def my_chat_member_from_first_name(self):
+        return self._getitem(self.my_chat_member_from, "first_name")
+
+    @property
     def callback_query_message_info(self):
         return (
             self.callback_query_id,
@@ -135,25 +178,43 @@ class Message:
 
 def parse_message(msg):
     """
-    Parses a message object received from the Telegram API.
+    Parses a message object received from the Telegram API and extracts relevant information.
 
-    Analyzes the message to extract various components like chat ID and message information. Differentiates between normal messages and callback queries.
+    This function analyzes a Telegram message dictionary to determine the type of message (inline query, callback query, private, or group) and extracts essential information such as chat ID, message content, and message type.
 
-    Args:
-        msg (dict): A dictionary representing a Telegram message.
+    :param msg: A dictionary representing a Telegram message, typically received from the Telegram API.
+    :type msg: dict
 
-    Returns:
-        tuple: A tuple containing the chat ID, message information, and message type.
+    :return: A tuple containing the chat ID, message information, and the type of message.
+             The structure of the returned tuple varies depending on the message type.
+    :rtype: tuple
+
+    The function handles different types of Telegram messages:
+        | - Inline queries: Returns the query ID, query text, and message type as "inline_query".
+        | - Callback queries: Returns the chat ID of the callback message, callback query information, and message type as "callback_query".
+        | - Private and group chats: Returns the chat ID, message information, and chat type ("private" or "group").
+
+    Example:
+        | For an inline query, it returns (query_id, query_text, "inline_query").
+        | For a callback query, it returns (chat_id, callback_query_info, "callback_query").
+        | For standard messages, it returns (chat_id, message_info, chat_type).
+
+    Note:
+        The function relies on the 'Message' class to process the raw message dictionary into a more structured format.
     """
     msg = Message(msg)
+    if msg.inline_query:
+        return msg.query_id, msg.query, "inline_query"
     if msg.callback_query:
         return (
             msg.callback_query_message_chat_id,
             msg.callback_query_message_info,
             "callback_query",
         )
-    elif msg.chat_type == "private":
-        return msg.chat_id, msg.message_info, "private message"
+    if msg.chat_type == "private":
+        return msg.chat_id, msg.message_info, "private"
+    if msg.chat_type == "group":
+        return msg.chat_id, msg.message_info, "group"
 
 
 async def post_json(url, json_data):
@@ -255,7 +316,6 @@ async def editMessageText(chat_id, message_id, text, reply_markup=None):
         str: The text response of the request.
     """
 
-    await asyncio.create_task(sendChatAction(chat_id, action="typing"))
     url = f"{base_link}/editMessageText"
     payload = {
         "chat_id": chat_id,
@@ -288,6 +348,32 @@ async def answerCallbackQuery(callback_query_id, text):
     return await r
 
 
+async def answerInlineQuery(inline_query_id, results):
+    """
+    Asynchronously sends a response to an inline query in Telegram.
+
+    This function is used to send results in response to an inline query made by a user in a Telegram bot. Inline queries allow users to select from a list of results and send them into the chat.
+
+    :param inline_query_id: Unique identifier for the answered query.
+    :type inline_query_id: str
+    :param results: A list of results for the inline query. Each item in the list should be a type of InlineQueryResult.
+    :type results: list
+
+    :return: The result of the asynchronous operation to send the inline query response.
+    :rtype: Coroutine
+
+    :raises ValueError: If the results are not properly formatted.
+    """
+    url = f"{base_link}/answerInlineQuery"
+    payload = {
+        "inline_query_id": inline_query_id,
+        "results": results,
+        "cache_time": 200,
+    }
+    r = asyncio.create_task(post_json(url, payload))
+    return await r
+
+
 async def setMessageReaction(chat_id, message_id, reaction, is_big=False):
     """
     Asynchronously sets a reaction emoji to a specific message in a Telegram chat.
@@ -304,8 +390,12 @@ async def setMessageReaction(chat_id, message_id, reaction, is_big=False):
         str: A response indicating the success or failure of the reaction setting request.
     """
     url = f"{base_link}/setMessageReaction"
-    payload = {"chat_id": chat_id, "message_id": message_id, "reaction": reaction}
-    if is_big:
-        payload["is_big"] = is_big
+    payload = {
+        "chat_id": chat_id,
+        "message_id": message_id,
+        "reaction": reaction,
+        "is_big": is_big,
+    }
+
     r = asyncio.create_task(post_json(url, payload))
     return await r
