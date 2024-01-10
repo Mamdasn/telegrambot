@@ -26,8 +26,8 @@ def manage_messages(msg):
         chat_id, message_info, chat_type = parsed_message
         if chat_type == "callback_query":
             handle_callback_query(chat_id, message_info)
-        elif chat_type == "private":
-            handle_message(chat_id, message_info)
+        elif chat_type in ("private", "group"):
+            handle_message(chat_id, message_info, chat_type)
 
 
 def handle_commands(message):
@@ -60,21 +60,27 @@ def handle_commands(message):
     return reply, inline_keyboard
 
 
-def handle_message(chat_id, message_info):
+def handle_message(chat_id, message_info, chat_type="private"):
     """
     Handles a standard message received in a private chat.
 
     Extracts message content and ID from `message_info`, processes it through `handle_commands`,
     and then sends an appropriate response back to the user in the chat.
 
-    Args:
-        | chat_id (str): Unique identifier for the target chat.
-        | message_info (tuple): A tuple containing the message text and message ID.
+    :param chat_id: Unique identifier for the target chat or username of the target channel.
+    :type chat_id: int
+    :param message_info: Tuple containing the message text and message ID.
+    :type message_info: tuple
+    :param chat_type: Type of the chat, defaults to "private". Can also be "group".
+    :type chat_type: str, optional
 
-    Returns:
-        None
+    :return: None. The function sends messages and handles responses asynchronously.
+    :rtype: NoneType
+
+    Note:
+        In group chats, the function only processes messages that start with "/" (commands).
     """
-    message, message_id = message_info
+    message, message_id, _ = message_info
     reply, inline_keyboard = handle_commands(message)
 
     emojies = [
