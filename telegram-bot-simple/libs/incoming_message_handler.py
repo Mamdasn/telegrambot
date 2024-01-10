@@ -82,6 +82,9 @@ def handle_message(chat_id, message_info, chat_type="private"):
     """
     message, message_id, _ = message_info
 
+    if not message:
+        return
+
     # Commands explicitly meant for bots in groups (e.g., /command@bot_username).
     if chat_type in ("group", "supergroup"):
         if "@" not in message:
