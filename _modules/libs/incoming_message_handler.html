@@ -108,7 +108,7 @@
         <span class="n">chat_id</span><span class="p">,</span> <span class="n">message_info</span><span class="p">,</span> <span class="n">chat_type</span> <span class="o">=</span> <span class="n">parsed_message</span>
         <span class="k">if</span> <span class="n">chat_type</span> <span class="o">==</span> <span class="s2">&quot;callback_query&quot;</span><span class="p">:</span>
             <span class="n">handle_callback_query</span><span class="p">(</span><span class="n">chat_id</span><span class="p">,</span> <span class="n">message_info</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">chat_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;private&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">chat_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;private&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;supergroup&quot;</span><span class="p">):</span>
             <span class="n">handle_message</span><span class="p">(</span><span class="n">chat_id</span><span class="p">,</span> <span class="n">message_info</span><span class="p">,</span> <span class="n">chat_type</span><span class="p">)</span></div>
 
 
@@ -169,6 +169,14 @@
 <span class="sd">        In group chats, the function only processes messages that start with &quot;/&quot; (commands).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">message</span><span class="p">,</span> <span class="n">message_id</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">message_info</span>
+
+    <span class="c1"># Commands explicitly meant for bots in groups (e.g., /command@bot_username).</span>
+    <span class="k">if</span> <span class="n">chat_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;supergroup&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;@&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="p">[:</span><span class="n">message</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)]</span>
+
     <span class="n">reply</span><span class="p">,</span> <span class="n">inline_keyboard</span> <span class="o">=</span> <span class="n">handle_commands</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="n">emojies</span> <span class="o">=</span> <span class="p">[</span>
@@ -263,6 +271,9 @@
 
     <span class="n">reply_keyboard</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;keyboard&quot;</span><span class="p">:</span> <span class="n">keyboard</span><span class="p">,</span> <span class="s2">&quot;resize_keyboard&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
     <span class="n">reply_markup</span> <span class="o">=</span> <span class="n">inline_keyboard</span> <span class="k">if</span> <span class="n">inline_keyboard</span> <span class="k">else</span> <span class="n">reply_keyboard</span>
+
+    <span class="k">if</span> <span class="n">chat_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;supergroup&quot;</span><span class="p">):</span>
+        <span class="n">reply_markup</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
         <span class="n">send_message</span><span class="p">(</span>
