@@ -26,7 +26,7 @@ def manage_messages(msg):
         chat_id, message_info, chat_type = parsed_message
         if chat_type == "callback_query":
             handle_callback_query(chat_id, message_info)
-        elif chat_type in ("private", "group"):
+        elif chat_type in ("private", "group", "supergroup"):
             handle_message(chat_id, message_info, chat_type)
 
 
@@ -81,6 +81,14 @@ def handle_message(chat_id, message_info, chat_type="private"):
         In group chats, the function only processes messages that start with "/" (commands).
     """
     message, message_id, _ = message_info
+
+    # Commands explicitly meant for bots in groups (e.g., /command@bot_username).
+    if chat_type in ("group", "supergroup"):
+        if "@" not in message:
+            return
+        else:
+            message = message[:message.rfind("@")]
+
     reply, inline_keyboard = handle_commands(message)
 
     emojies = [
@@ -175,6 +183,9 @@ def handle_message(chat_id, message_info, chat_type="private"):
 
     reply_keyboard = {"keyboard": keyboard, "resize_keyboard": True}
     reply_markup = inline_keyboard if inline_keyboard else reply_keyboard
+
+    if chat_type in ("group", "supergroup"):
+        reply_markup = None
 
     r = asyncio.run(
         send_message(
