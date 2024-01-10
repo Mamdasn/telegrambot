@@ -90,7 +90,7 @@ def handle_message(chat_id, message_info, chat_type="private"):
         if "@" not in message:
             return
         else:
-            message = message[:message.rfind("@")]
+            message = message[: message.rfind("@")]
 
     reply, inline_keyboard = handle_commands(message)
 
