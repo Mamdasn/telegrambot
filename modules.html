@@ -59,6 +59,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#libs.telegram_bot_api.deleteMessage"><code class="docutils literal notranslate"><span class="pre">deleteMessage()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#libs.telegram_bot_api.editMessageText"><code class="docutils literal notranslate"><span class="pre">editMessageText()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#libs.telegram_bot_api.answerCallbackQuery"><code class="docutils literal notranslate"><span class="pre">answerCallbackQuery()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#libs.telegram_bot_api.answerInlineQuery"><code class="docutils literal notranslate"><span class="pre">answerInlineQuery()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#libs.telegram_bot_api.setMessageReaction"><code class="docutils literal notranslate"><span class="pre">setMessageReaction()</span></code></a></li>
 </ul>
 </li>
@@ -104,31 +105,41 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="libs.telegram_bot_api.Message">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">libs.telegram_bot_api.</span></span><span class="sig-name descname"><span class="pre">Message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/libs/telegram_bot_api.html#Message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#libs.telegram_bot_api.Message" title="Link to this definition"></a></dt>
-<dd><p>A class to represent and process a message object.</p>
-<p>This class provides methods to extract various pieces of information from
-a message dictionary, typically received from an API like Telegram.</p>
+<dd><p>A class to represent and process a Telegram message.</p>
+<p>This class provides a structured way to access various components of a message received in Telegram. It uses properties to access specific parts of the message, such as text, chat information, callback queries, and more.</p>
 <dl>
-<dt>Attributes:</dt><dd><p>_message (dict): The original message dictionary.</p>
+<dt>Attributes:</dt><dd><p>_message (dict): The original message dictionary received from Telegram.</p>
 </dd>
-<dt>Methods:</dt><dd><div class="line-block">
-<div class="line">message: Retrieves the main message content.</div>
-<div class="line">chat: Retrieves chat information from the message.</div>
-<div class="line">chat_id: Retrieves the unique chat ID.</div>
-<div class="line">chat_type: Retrieves the type of chat (e.g., private, group).</div>
-<div class="line">message_id: Retrieves the ID of the message.</div>
-<div class="line">message_text: Retrieves the text of the message.</div>
-<div class="line">message_info: Retrieves a tuple with text and ID of the message.</div>
-<div class="line">callback_query: Retrieves callback query information.</div>
-<div class="line">callback_query_id: Retrieves the callback query ID.</div>
-<div class="line">callback_query_data: Retrieves the callback query data.</div>
-<div class="line">callback_query_message: Retrieves the message related to the callback query.</div>
-<div class="line">callback_query_message_id: Retrieves the message ID of the callback query.</div>
-<div class="line">callback_query_message_chat: Retrieves chat information of the callback query message.</div>
-<div class="line">callback_query_message_chat_id: Retrieves the chat ID of the callback query message.</div>
-<div class="line">callback_query_reply_to_message: Retrieves the original message to which the callback query is replying.</div>
-<div class="line">callback_query_reply_to_message_message_id: Retrieves the message ID of the original message in the callback query.</div>
-<div class="line">callback_query_message_info: Retrieves a tuple with detailed info of the callback query message.</div>
+<dt>The class provides properties to access different elements of the message:</dt><dd><div class="line-block">
+<div class="line">- <cite>message</cite>: The main message content.</div>
+<div class="line">- <cite>chat</cite>: Information about the chat.</div>
+<div class="line">- <cite>chat_id</cite>: Unique identifier for the chat.</div>
+<div class="line">- <cite>chat_type</cite>: Type of the chat (e.g., private, group).</div>
+<div class="line">- <cite>message_id</cite>: Unique message identifier.</div>
+<div class="line">- <cite>message_text</cite>: Text of the message.</div>
+<div class="line">- <cite>message_info</cite>: Tuple containing message text and message ID.</div>
+<div class="line">- <cite>inline_query</cite>: Inline query information, if any.</div>
+<div class="line">- <cite>query</cite>: The inline query text.</div>
+<div class="line">- <cite>query_id</cite>: Inline query identifier.</div>
+<div class="line">- <cite>callback_query</cite>: Callback query information, if any.</div>
+<div class="line">- <cite>callback_query_id</cite>: Callback query identifier.</div>
+<div class="line">- <cite>callback_query_data</cite>: Data associated with the callback query.</div>
+<div class="line">- <cite>callback_query_message</cite>: Message associated with the callback query.</div>
+<div class="line">- <cite>callback_query_message_id</cite>: Message ID of the callback query message.</div>
+<div class="line">- <cite>callback_query_message_chat</cite>: Chat information of the callback query message.</div>
+<div class="line">- <cite>callback_query_message_chat_id</cite>: Chat ID of the callback query message.</div>
+<div class="line">- <cite>callback_query_reply_to_message</cite>: Original message replied to by the callback query.</div>
+<div class="line">- <cite>callback_query_reply_to_message_message_id</cite>: Message ID of the replied-to message.</div>
+<div class="line">- <cite>my_chat_member</cite>: Information about changes in chat member status.</div>
+<div class="line">- <cite>my_chat_member_chat</cite>: Chat information related to the chat member status change.</div>
+<div class="line">- <cite>my_chat_member_chat_title</cite>: Title of the chat related to the chat member status change.</div>
+<div class="line">- <cite>my_chat_member_chat_type</cite>: Type of the chat related to the chat member status change.</div>
+<div class="line">- <cite>my_chat_member_from</cite>: User information of the member whose status in the chat has changed.</div>
+<div class="line">- <cite>my_chat_member_from_first_name</cite>: First name of the user whose chat member status has changed.</div>
+<div class="line">- <cite>callback_query_message_info</cite>: A tuple containing various pieces of information about the callback query message.</div>
 </div>
+</dd>
+<dt>Methods:</dt><dd><p>_getitem(dic, key): A static method to safely extract a nested value from a dictionary using a key or a tuple of nested keys.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -136,12 +147,34 @@ a message dictionary, typically received from an API like Telegram.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="libs.telegram_bot_api.parse_message">
 <span class="sig-prename descclassname"><span class="pre">libs.telegram_bot_api.</span></span><span class="sig-name descname"><span class="pre">parse_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/libs/telegram_bot_api.html#parse_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#libs.telegram_bot_api.parse_message" title="Link to this definition"></a></dt>
-<dd><p>Parses a message object received from the Telegram API.</p>
-<p>Analyzes the message to extract various components like chat ID and message information. Differentiates between normal messages and callback queries.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>msg (dict): A dictionary representing a Telegram message.</p>
+<dd><p>Parses a message object received from the Telegram API and extracts relevant information.</p>
+<p>This function analyzes a Telegram message dictionary to determine the type of message (inline query, callback query, private, or group) and extracts essential information such as chat ID, message content, and message type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>dict</em>) – A dictionary representing a Telegram message, typically received from the Telegram API.</p>
 </dd>
-<dt>Returns:</dt><dd><p>tuple: A tuple containing the chat ID, message information, and message type.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the chat ID, message information, and the type of message.
+The structure of the returned tuple varies depending on the message type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<dl>
+<dt>The function handles different types of Telegram messages:</dt><dd><div class="line-block">
+<div class="line">- Inline queries: Returns the query ID, query text, and message type as “inline_query”.</div>
+<div class="line">- Callback queries: Returns the chat ID of the callback message, callback query information, and message type as “callback_query”.</div>
+<div class="line">- Private and group chats: Returns the chat ID, message information, and chat type (“private” or “group”).</div>
+</div>
+</dd>
+<dt>Example:</dt><dd><div class="line-block">
+<div class="line">For an inline query, it returns (query_id, query_text, “inline_query”).</div>
+<div class="line">For a callback query, it returns (chat_id, callback_query_info, “callback_query”).</div>
+<div class="line">For standard messages, it returns (chat_id, message_info, chat_type).</div>
+</div>
+</dd>
+<dt>Note:</dt><dd><p>The function relies on the ‘Message’ class to process the raw message dictionary into a more structured format.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -242,6 +275,30 @@ a message dictionary, typically received from an API like Telegram.</p>
 </div>
 </dd>
 <dt>Returns:</dt><dd><p>str: The text response of the request.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="libs.telegram_bot_api.answerInlineQuery">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">libs.telegram_bot_api.</span></span><span class="sig-name descname"><span class="pre">answerInlineQuery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inline_query_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/libs/telegram_bot_api.html#answerInlineQuery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#libs.telegram_bot_api.answerInlineQuery" title="Link to this definition"></a></dt>
+<dd><p>Asynchronously sends a response to an inline query in Telegram.</p>
+<p>This function is used to send results in response to an inline query made by a user in a Telegram bot. Inline queries allow users to select from a list of results and send them into the chat.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inline_query_id</strong> (<em>str</em>) – Unique identifier for the answered query.</p></li>
+<li><p><strong>results</strong> (<em>list</em>) – A list of results for the inline query. Each item in the list should be a type of InlineQueryResult.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the asynchronous operation to send the inline query response.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Coroutine</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the results are not properly formatted.</p>
 </dd>
 </dl>
 </dd></dl>
