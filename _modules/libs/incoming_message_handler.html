@@ -108,8 +108,8 @@
         <span class="n">chat_id</span><span class="p">,</span> <span class="n">message_info</span><span class="p">,</span> <span class="n">chat_type</span> <span class="o">=</span> <span class="n">parsed_message</span>
         <span class="k">if</span> <span class="n">chat_type</span> <span class="o">==</span> <span class="s2">&quot;callback_query&quot;</span><span class="p">:</span>
             <span class="n">handle_callback_query</span><span class="p">(</span><span class="n">chat_id</span><span class="p">,</span> <span class="n">message_info</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">chat_type</span> <span class="o">==</span> <span class="s2">&quot;private&quot;</span><span class="p">:</span>
-            <span class="n">handle_message</span><span class="p">(</span><span class="n">chat_id</span><span class="p">,</span> <span class="n">message_info</span><span class="p">)</span></div>
+        <span class="k">elif</span> <span class="n">chat_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;private&quot;</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">):</span>
+            <span class="n">handle_message</span><span class="p">(</span><span class="n">chat_id</span><span class="p">,</span> <span class="n">message_info</span><span class="p">,</span> <span class="n">chat_type</span><span class="p">)</span></div>
 
 
 
@@ -148,21 +148,27 @@
 
 <div class="viewcode-block" id="handle_message">
 <a class="viewcode-back" href="../../modules.html#libs.incoming_message_handler.handle_message">[docs]</a>
-<span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span><span class="n">chat_id</span><span class="p">,</span> <span class="n">message_info</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">handle_message</span><span class="p">(</span><span class="n">chat_id</span><span class="p">,</span> <span class="n">message_info</span><span class="p">,</span> <span class="n">chat_type</span><span class="o">=</span><span class="s2">&quot;private&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Handles a standard message received in a private chat.</span>
 
 <span class="sd">    Extracts message content and ID from `message_info`, processes it through `handle_commands`,</span>
 <span class="sd">    and then sends an appropriate response back to the user in the chat.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        | chat_id (str): Unique identifier for the target chat.</span>
-<span class="sd">        | message_info (tuple): A tuple containing the message text and message ID.</span>
+<span class="sd">    :param chat_id: Unique identifier for the target chat or username of the target channel.</span>
+<span class="sd">    :type chat_id: int</span>
+<span class="sd">    :param message_info: Tuple containing the message text and message ID.</span>
+<span class="sd">    :type message_info: tuple</span>
+<span class="sd">    :param chat_type: Type of the chat, defaults to &quot;private&quot;. Can also be &quot;group&quot;.</span>
+<span class="sd">    :type chat_type: str, optional</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
+<span class="sd">    :return: None. The function sends messages and handles responses asynchronously.</span>
+<span class="sd">    :rtype: NoneType</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        In group chats, the function only processes messages that start with &quot;/&quot; (commands).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">message</span><span class="p">,</span> <span class="n">message_id</span> <span class="o">=</span> <span class="n">message_info</span>
+    <span class="n">message</span><span class="p">,</span> <span class="n">message_id</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">message_info</span>
     <span class="n">reply</span><span class="p">,</span> <span class="n">inline_keyboard</span> <span class="o">=</span> <span class="n">handle_commands</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="n">emojies</span> <span class="o">=</span> <span class="p">[</span>

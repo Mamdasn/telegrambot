@@ -355,17 +355,27 @@ inline keyboard structure for interactive responses in Telegram.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="libs.incoming_message_handler.handle_message">
-<span class="sig-prename descclassname"><span class="pre">libs.incoming_message_handler.</span></span><span class="sig-name descname"><span class="pre">handle_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chat_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/libs/incoming_message_handler.html#handle_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#libs.incoming_message_handler.handle_message" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">libs.incoming_message_handler.</span></span><span class="sig-name descname"><span class="pre">handle_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chat_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chat_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'private'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/libs/incoming_message_handler.html#handle_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#libs.incoming_message_handler.handle_message" title="Link to this definition"></a></dt>
 <dd><p>Handles a standard message received in a private chat.</p>
 <p>Extracts message content and ID from <cite>message_info</cite>, processes it through <cite>handle_commands</cite>,
 and then sends an appropriate response back to the user in the chat.</p>
-<dl>
-<dt>Args:</dt><dd><div class="line-block">
-<div class="line">chat_id (str): Unique identifier for the target chat.</div>
-<div class="line">message_info (tuple): A tuple containing the message text and message ID.</div>
-</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chat_id</strong> (<em>int</em>) – Unique identifier for the target chat or username of the target channel.</p></li>
+<li><p><strong>message_info</strong> (<em>tuple</em>) – Tuple containing the message text and message ID.</p></li>
+<li><p><strong>chat_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of the chat, defaults to “private”. Can also be “group”.</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>None</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None. The function sends messages and handles responses asynchronously.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NoneType</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Note:</dt><dd><p>In group chats, the function only processes messages that start with “/” (commands).</p>
 </dd>
 </dl>
 </dd></dl>
