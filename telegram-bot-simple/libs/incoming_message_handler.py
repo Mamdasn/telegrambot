@@ -26,7 +26,7 @@ def manage_messages(msg):
         chat_id, message_info, chat_type = parsed_message
         if chat_type == "callback_query":
             handle_callback_query(chat_id, message_info)
-        elif chat_type == "private message":
+        elif chat_type == "private":
             handle_message(chat_id, message_info)
 
 
