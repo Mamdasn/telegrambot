@@ -302,7 +302,7 @@ async def deleteMessage(chat_id, message_id):
     return await r
 
 
-async def editMessageText(chat_id, message_id, text, reply_markup=None):
+async def editMessageText(chat_id, message_id, text, reply_markup=None, link_preview_options=None):
     """
     Asynchronously edits the text of a message in a Telegram chat.
 
@@ -313,6 +313,8 @@ async def editMessageText(chat_id, message_id, text, reply_markup=None):
         | message_id (str): Identifier of the message to edit.
         | text (str): New text to replace the existing message content.
         | reply_markup (str, optional): Additional interface options in JSON-serialized format.
+        | link_preview_options (dict, optional): A dictionary to control link preview behavior.
+          | It can include 'is_disabled' (bool) to enable or disable link previews.
 
     Returns:
         str: The text response of the request.
@@ -327,6 +329,8 @@ async def editMessageText(chat_id, message_id, text, reply_markup=None):
     }
     if reply_markup:
         payload["reply_markup"] = reply_markup
+    if link_preview_options:
+        payload["link_preview_options"] = link_preview_options
     r = asyncio.create_task(post_json(url, payload))
     return await r
 
