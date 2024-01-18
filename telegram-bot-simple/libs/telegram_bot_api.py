@@ -256,7 +256,7 @@ async def sendChatAction(chat_id, action="typing"):
     return await r
 
 
-async def send_message(chat_id, text, reply_to_message_id=None, reply_markup=None):
+async def send_message(chat_id, text, reply_to_message_id=None, reply_markup=None, link_preview_options=None):
     """
     Asynchronously sends a message to a Telegram chat.
 
@@ -267,6 +267,8 @@ async def send_message(chat_id, text, reply_to_message_id=None, reply_markup=Non
         | text (str): The text of the message to be sent.
         | reply_to_message_id (str, optional): If the message is a reply, ID of the original message.
         | reply_markup (str, optional): Additional interface options in JSON-serialized format.
+        | link_preview_options (dict, optional): A dictionary to control link preview behavior.
+          | It can include 'is_disabled' (bool) to enable or disable link previews.
 
     Returns:
         str: The text response of the request.
@@ -279,6 +281,8 @@ async def send_message(chat_id, text, reply_to_message_id=None, reply_markup=Non
         payload["reply_to_message_id"] = reply_to_message_id
     if reply_markup:
         payload["reply_markup"] = reply_markup
+    if link_preview_options:
+        payload["link_preview_options"] = link_preview_options
     r = asyncio.create_task(post_json(url, payload))
     return await r
 
