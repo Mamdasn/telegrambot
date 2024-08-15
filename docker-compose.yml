@@ -4,7 +4,7 @@ services:
   telegram_bot:
     build: telegram-bot-simple
     container_name: telegram-bot-simple
-    image: ${TELEGRAMBOT_IMAGE_BUILD:-sfarhad/telegram-bot-simple:0.0.0}
+    image: ${TELEGRAMBOT_IMAGE_BUILD:-sfarhad/telegram-bot-simple:2.0.0}
     ports:
       - "${SSL_PORT:-443}:443"
     environment:
