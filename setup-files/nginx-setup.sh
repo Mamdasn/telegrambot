@@ -7,11 +7,11 @@ events {
 }
 http {
     server {
-	listen 443 ssl;
+	listen $SSL_PORT ssl;
         server_name localhost;
         ssl_certificate /etc/nginx/cert.pem;
         ssl_certificate_key /etc/nginx/cert.key;
-        
+
         location / {
 WHITE_LISTED_IPS
 		deny all;

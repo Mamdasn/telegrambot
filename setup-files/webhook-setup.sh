@@ -1,9 +1,10 @@
 #!/bin/sh
 
-PORTSSL=443
-
 [ -z $IP_ADDRESS ] &&
 	echo set the IP_ADDRESS by running: export IP_ADDRESS={IP_ADDRESS}. &&
+		return
+[ -z $SSL_PORT ] &&
+	echo set the SSL_PORT by running: export SSL_PORT={SSL_PORT}. &&
 		return
 [ -z $TG_BOT_TOKEN ] &&
 	echo set the TG_BOT_TOKEN by running: export TG_BOT_TOKEN={TG_BOT_TOKEN}. &&
@@ -21,7 +22,7 @@ SSL_PRIVATE=$(realpath YOURPRIVATE.key)
 echo SSL_PUBLIC: $SSL_PUBLIC
 echo SSL_PRIVATE: $SSL_PRIVATE
 
-curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$PORTSSL/" -F "certificate=@YOURPUBLIC.pem" "https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook"
+curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$SSL_PORT/" -F "certificate=@YOURPUBLIC.pem" "https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook"
 
 echo
 echo Continuing to the next stage
