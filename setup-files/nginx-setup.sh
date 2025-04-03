@@ -7,7 +7,7 @@ events {
 }
 http {
     server {
-	listen $SSL_PORT ssl;
+	listen 443 ssl;
         server_name localhost;
         ssl_certificate /etc/nginx/cert.pem;
         ssl_certificate_key /etc/nginx/cert.key;
