@@ -21,9 +21,8 @@ class config:
 
     TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "PLACE HOLDER")
     POSTGRES = {
-            'host': os.environ.get("POSTGRES_HOST", "PLACE HOLDER"), 
-            'database': os.environ.get("POSTGRES_DB", "PLACE HOLDER"), 
-            'user': os.environ.get("POSTGRES_USER", "PLACE HOLDER"), 
-            'password': os.environ.get("POSTGRES_PASSWORD", "PLACE HOLDER")
-            }
-
+        "host": os.environ.get("POSTGRES_HOST", "PLACE HOLDER"),
+        "database": os.environ.get("POSTGRES_DB", "PLACE HOLDER"),
+        "user": os.environ.get("POSTGRES_USER", "PLACE HOLDER"),
+        "password": os.environ.get("POSTGRES_PASSWORD", "PLACE HOLDER"),
+    }
