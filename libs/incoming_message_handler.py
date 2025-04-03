@@ -2,6 +2,8 @@ import asyncio
 import datetime
 from random import choice as pick_randomly
 
+from .credentials import config
+from .postgres_api import Fetchpostgres
 from .telegram_bot_api import (
     answer_callback_query,
     answer_inline_query,
@@ -16,21 +18,7 @@ from .tools_collection import (
     message_format_for_postgres,
 )
 
-fetcher = None
-
-
-def set_fetcher(created_fetcher):
-    """
-    Sets the global fetcher by the given fetcher value
-
-    :param created_fetcher: The created fetcher in the main thread for the communication with postgresql.
-    :type page_number: Fetchpostgres
-
-    :return: None
-    :rtype: NoneType
-    """
-    global fetcher
-    fetcher = created_fetcher
+fetcher = Fetchpostgres(config.POSTGRES)
 
 
 def message_and_reply_markup_format(page_number, queries, command):
