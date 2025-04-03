@@ -1,5 +1,6 @@
 import datetime
 from functools import partial
+from time import sleep
 
 import psycopg2
 
@@ -23,6 +24,19 @@ class Fetchpostgres:
         """
         self.params = params
         self.connection = psycopg2.connect
+
+    def establish_db_connection(self):
+        """
+        Establish a PostgreSQL DB connection and return it.
+        """
+        for i in range(3):
+            try:
+                print(f"Establishing a Postgres DB connection, try {i + 1}")
+                return self.connection(**self.params)
+            except Exception as e:
+                sleep(5)
+                print(f"Failed to connect to Postgres DB due to: {e}")
+        raise ValueError("Can not establish a connection to the Postgres DB.")
 
     def start(self):
         """
@@ -49,7 +63,7 @@ class Fetchpostgres:
         :return: Commit status of the connection.
         :rtype: None
         """
-        with self.connection(**self.params).cursor() as cursor:
+        with self.establish_db_connection().cursor() as cursor:
             check_existence = """
                 SELECT EXISTS (
                     SELECT 1
@@ -90,7 +104,7 @@ class Fetchpostgres:
                 ),
             )
             cursor.fetchone()
-        return self.connection(**self.params).commit()
+        return self.establish_db_connection().commit()
 
     def get_by_specific_date(self, date):
         """
@@ -101,7 +115,7 @@ class Fetchpostgres:
         :return: Fetched records from the database.
         :rtype: list
         """
-        with self.connection(**self.params).cursor() as cursor:
+        with self.establish_db_connection().cursor() as cursor:
             postgreSQL_select_Query = "select * from events where Datum = %s::date"
             cursor.execute(postgreSQL_select_Query, (date,))
             fetched_records = cursor.fetchall()
@@ -118,7 +132,7 @@ class Fetchpostgres:
         :return: Fetched records from the database.
         :rtype: list
         """
-        with self.connection(**self.params).cursor() as cursor:
+        with self.establish_db_connection().cursor() as cursor:
             postgreSQL_select_Query = f"select * from events where {column} = %s::time"
             cursor.execute(postgreSQL_select_Query, (time,))
             fetched_records = cursor.fetchall()
@@ -135,7 +149,7 @@ class Fetchpostgres:
         :return: Rows from the database where the column contains the query.
         :rtype: list
         """
-        with self.connection(**self.params).cursor() as cursor:
+        with self.establish_db_connection().cursor() as cursor:
             query_statement = f"{column} ILIKE ANY(%s)"
             cursor.execute(
                 "SELECT * FROM events WHERE " + query_statement,
@@ -157,7 +171,7 @@ class Fetchpostgres:
         :return: Distinct rows from the database where any of the specified columns contains the query.
         :rtype: list
         """
-        with self.connection(**self.params).cursor() as cursor:
+        with self.establish_db_connection().cursor() as cursor:
             query_statement = " OR ".join([f"{column} ILIKE %s" for column in columns])
             if "Datum" in columns:
                 query_statement = query_statement.replace(
