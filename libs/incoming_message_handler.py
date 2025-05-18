@@ -56,10 +56,6 @@ def manage_messages(msg):
 
     :return: None. The function processes messages and triggers other functions without returning a value.
     :rtype: NoneType
-
-    The function handles different types of interactions like callback queries, private messages, group messages, and inline queries. It uses a 'parse_message' function to extract necessary information and then calls the relevant handler such as 'handle_callback_query', 'handle_message', or 'handle_inline_query'.
-
-    Exception handling is implemented to catch and log any errors during message processing.
     """
     try:
         parsed_message = parse_message(msg)
@@ -101,9 +97,6 @@ def handle_commands(message):
        | - Any other text: Treated as a search query.
 
     The function also handles date-specific queries and provides a mechanism for calendar-based event selection.
-
-    Note:
-        The function relies on an external 'fetcher' module to retrieve data from a database based on the commands.
     """
     queries = []
     reply_markup = ""
@@ -221,7 +214,7 @@ def handle_message(chat_id, message_info, chat_type="private"):
     :rtype: NoneType
 
     Note:
-        In group chats, the function only processes messages that start with "/" (commands).
+        In group chats, unlike private chats, this function only processes messages that start with "/" (commands).
     """
     message, message_id, _ = message_info
 
@@ -307,9 +300,6 @@ def handle_inline_query(inline_query_id, message_info):
 
     :return: None. The function sends inline query responses asynchronously.
     :rtype: NoneType
-
-    Note:
-        The function formats the fetched data into a specific structure required by Telegram for inline query results.
     """
     search_query = message_info.split(",")
     queries = fetcher.get_query_any_column(
@@ -362,9 +352,6 @@ def handle_callback_query(chat_id, message_info):
 
     :return: None. The function performs its operations asynchronously and sends responses directly to the Telegram chat.
     :rtype: NoneType
-
-    Note:
-        The function relies on 'answer_callback_query' to send an acknowledgement to the callback query and 'edit_message_text' to modify the message based on the callback query's data.
     """
     (
         callback_query_id,
