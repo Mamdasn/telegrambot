@@ -22,7 +22,14 @@ SSL_PRIVATE=$(realpath YOURPRIVATE.key)
 echo SSL_PUBLIC: $SSL_PUBLIC
 echo SSL_PRIVATE: $SSL_PRIVATE
 
-curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$SSL_PORT/" -F "certificate=@YOURPUBLIC.pem" "https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook"
+IP_PATTERN='^([0-9]{1,3}\.){3}[0-9]{1,3}$'
+if [[ $IP_ADDRESS =~ $IP_PATTERN ]]; then
+	echo Setting up telegram webhook on an IP
+	curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$SSL_PORT/" -F "certificate=@YOURPUBLIC.pem" "https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook"
+else
+	echo Setting up telegram webhook on a URL
+	curl -F "url=https://$IP_ADDRESS:$SSL_PORT/" -F "certificate=@YOURPUBLIC.pem" "https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook"
+fi
 
 echo
 echo Continuing to the next stage
