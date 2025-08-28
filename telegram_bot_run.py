@@ -1,3 +1,5 @@
+import logging
+
 from flask import Flask, abort, request
 from flask.wrappers import Response
 
@@ -5,12 +7,18 @@ import libs.incoming_message_handler as incoming_message_handler
 
 app = Flask(__name__)
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+
+logger = logging.getLogger(__name__)
 
 @app.before_request
 def abortion_method():
     # use the ip for future patches
     ip = str(request.environ.get("HTTP_X_REAL_IP", request.remote_addr))
-    print(ip)
+    logger.info(f"Server's ip: {ip}")
     if (request.method == "GET") or (request.args != {}):
         abort(403)
 

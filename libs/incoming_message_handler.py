@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import datetime
 from random import choice as pick_randomly
 
@@ -20,6 +21,7 @@ from .tools_collection import (
 
 fetcher = Fetchpostgres(config.POSTGRES)
 
+logger = logging.getLogger(__name__)
 
 def message_and_reply_markup_format(page_number, queries, command):
     """
@@ -68,7 +70,7 @@ def manage_messages(msg):
             elif chat_type == "inline_query":
                 handle_inline_query(inline_query_id=chat_id, message_info=message_info)
     except Exception as e:
-        print(e)
+        logger.error(f"Exception error during managing messages due to {e}")
 
 
 def handle_commands(message):
@@ -152,7 +154,7 @@ def handle_commands(message):
                 )
                 queries = fetcher.get_by_specific_date(date_query)
             except Exception as e:
-                print(e)
+                logger.error(f"Exception error during handling commands due to {e}")
                 queries = [
                     "This command should be used as follows:\n/date Day.Month.Year"
                 ]
