@@ -8,11 +8,11 @@ import libs.incoming_message_handler as incoming_message_handler
 app = Flask(__name__)
 
 logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
 logger = logging.getLogger(__name__)
+
 
 @app.before_request
 def abortion_method():

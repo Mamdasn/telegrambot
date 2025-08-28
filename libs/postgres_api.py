@@ -1,11 +1,12 @@
 import datetime
-from functools import partial
 import logging
+from functools import partial
 from time import sleep
 
 import psycopg2
 
 logger = logging.getLogger(__name__)
+
 
 class Fetchpostgres:
     """
@@ -31,13 +32,15 @@ class Fetchpostgres:
         """
         Establish a PostgreSQL DB connection and return it.
         """
-        logger.info(f"Establishing connection to postgres database")
+        logger.info("Establishing connection to postgres database")
         for i in range(3):
             try:
                 return self.connection(**self.params)
             except Exception as e:
                 sleep(5)
-                logger.error(f"Failed to connect to Postgres database due to {e} {', retrying' if i<3 else '.'}")
+                logger.error(
+                    f"Failed to connect to Postgres database due to {e} {', retrying' if i < 3 else '.'}"
+                )
         raise ValueError("Can not establish a connection to the Postgres DB.")
 
     def start(self):

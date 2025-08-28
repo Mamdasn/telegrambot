@@ -1,17 +1,15 @@
 import asyncio
-import logging
 import datetime
-from random import choice as pick_randomly
+import logging
 
 from .credentials import config
 from .postgres_api import Fetchpostgres
-from .telegram_bot_api import (
+from .telegram_bot_api import (  # set_message_reaction,
     answer_callback_query,
     answer_inline_query,
     edit_message_text,
     parse_message,
     send_message,
-    set_message_reaction,
 )
 from .tools_collection import get_calender  # get_next_period_of_time,
 from .tools_collection import (
@@ -19,9 +17,13 @@ from .tools_collection import (
     message_format_for_postgres,
 )
 
+# from random import choice as pick_randomly
+
+
 fetcher = Fetchpostgres(config.POSTGRES)
 
 logger = logging.getLogger(__name__)
+
 
 def message_and_reply_markup_format(page_number, queries, command):
     """
@@ -236,9 +238,9 @@ def handle_message(chat_id, message_info, chat_type="private"):
             },
         ],
     ]
-    emojies = [
-        "🕊",
-    ]
+    # emojies = [
+    #    "🕊",
+    # ]
 
     reply_keyboard_markup = {
         "keyboard": keyboard,
@@ -274,8 +276,8 @@ def handle_message(chat_id, message_info, chat_type="private"):
         else:
             reply_markup = reply_keyboard_markup
 
-        #reaction = [{"type": "emoji", "emoji": pick_randomly(emojies)}]
-        #asyncio.run(set_message_reaction(chat_id, message_id, reaction))
+        # reaction = [{"type": "emoji", "emoji": pick_randomly(emojies)}]
+        # asyncio.run(set_message_reaction(chat_id, message_id, reaction))
         asyncio.run(
             send_message(
                 chat_id=chat_id,
