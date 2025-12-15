@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.11-alpine
+FROM python:3.11-alpine3.20
 
 # Install nginx
 RUN apk --no-cache add nginx curl openssl
