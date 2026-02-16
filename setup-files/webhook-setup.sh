@@ -27,7 +27,7 @@ case "$IP_ADDRESS" in
 	    echo Setting up telegram webhook on an IP
 	    curl -F "ip_address=$IP_ADDRESS" -F "url=https://$IP_ADDRESS:$SSL_PORT/" -F "certificate=@YOURPUBLIC.pem" "https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook"
         ;;
-    *.*.*)
+    *.[A-Za-z]*)
 	    echo Setting up telegram webhook on a URL
 	    curl -F "url=https://$IP_ADDRESS:$SSL_PORT/" -F "certificate=@YOURPUBLIC.pem" "https://api.telegram.org/bot$TG_BOT_TOKEN/setWebhook"
         ;;
