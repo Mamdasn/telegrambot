@@ -303,17 +303,17 @@ class Fetchpostgres:
             "location": q[7],
         }
         newline = "\n"
-        date = f'<b>On {data["date"].strftime("%d.%m.%Y")}</b>' if data["date"] else ""
+        date = f'<b><ins>{data["date"].strftime("%d.%m.%Y")}</ins></b>' if data["date"] else ""
         time_range = (
-            f'{data["time range start"].strftime("%H:%M")} to {data["time range end"].strftime("%H:%M:")}'
+            f'<ins>{data["time range start"].strftime("%H:%M")}</ins> to <ins>{data["time range end"].strftime("%H:%M:")}</ins>'
             if data["time range end"]
-            else f'{data["time range start"].strftime("%H:%M")}'
+            else f'<ins>{data["time range start"].strftime("%H:%M")}</ins>'
             if data["time range start"]
             else ""
         )
-        thema = f"<b>Thema</b>: {data['thema']}{newline}" if data["thema"] else ""
+        thema = f"<b>Thema</b>: <i>{data['thema']}</i>{newline}" if data["thema"] else ""
         plz = (
-            f"<b>PLZ</b>: {data['plz']}{newline}"
+            f"; {data['plz']}"
             if ((data["plz"] != "") and (data["plz"] != "00000"))
             else ""
         )
@@ -324,31 +324,16 @@ class Fetchpostgres:
             else f"{google_maps_url_base}{data['versammlung']} Berlin"
         )
         versammlungsort = (
-            f'<b>Versammlungsort</b>: <a href="{google_maps_url}">{data["versammlung"]}{newline}</a>'
+            f'<b>Versammlungsort</b>: <a href="{google_maps_url}">{data["versammlung"]}{plz}{newline}</a>'
             if data["versammlung"]
             else ""
         )
-        route_with_google_maps_urls = ""
-        if data["location"]:
-            find_indexes = [
-                data["location"].find(sep)
-                for sep in [" - ", "/"]
-                if data["location"].find(sep) != -1
-            ]
-            if find_indexes:
-                first_location_index = min(find_indexes)
-                first_location = data["location"][:first_location_index]
-                route_with_google_maps_urls = f'<a href="{google_maps_url_base}{first_location} Berlin">{first_location}</a>{data["location"][first_location_index:]}'
-            else:
-                first_location = data["location"]
-                route_with_google_maps_urls = f'<a href="{google_maps_url_base}{first_location} Berlin">{first_location}</a>'
         aufzugsstrecke = (
-            f"<b>Aufzugsstrecke</b>: {route_with_google_maps_urls}{newline}"
+            f'<b>Aufzugsstrecke</b>: <i>{data["location"]}</i>{newline}'
             if data["location"]
             else ""
         )
-        # return f"<b>id: {q[0]}</b>{newline}{date}{' - ' if date and time_range else ''}{time_range}{newline}{thema}{plz}{versammlungsort}{aufzugsstrecke}"
-        return f"▪️{date}{' - ' if date and time_range else ''}{time_range}{newline}{thema}{plz}{versammlungsort}{aufzugsstrecke}"
+        return f"🔹️{date}{' - ' if date and time_range else ''}{time_range}{newline}{thema}{versammlungsort}{aufzugsstrecke}"
 
     def format_postgre_queries(self, queries):
         """
