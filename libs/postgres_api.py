@@ -7,6 +7,8 @@ import psycopg2
 
 logger = logging.getLogger(__name__)
 
+SOURCE_COLOR_PALETTE = ("🟥", "🟦", "🟪", "🟩", "🟨", "🟧", "🟫")
+
 
 class Fetchpostgres:
     """
@@ -27,6 +29,30 @@ class Fetchpostgres:
         """
         self.params = params
         self.connection = psycopg2.connect
+        self._source_icons = None
+
+    def get_source_icons(self):
+        """
+        Map each event source to a color icon, ordered alphabetically by source.
+
+        The distinct sources are read from the database once and cached, so the
+        color assignment is consistent across every formatted event.
+
+        :return: A mapping of source name to its color square.
+        :rtype: dict
+        """
+        if self._source_icons is None:
+            with self.establish_db_connection().cursor() as cursor:
+                cursor.execute(
+                    "SELECT DISTINCT source FROM events "
+                    "WHERE source IS NOT NULL ORDER BY source"
+                )
+                sources = [row[0] for row in cursor.fetchall()]
+            self._source_icons = {
+                source: SOURCE_COLOR_PALETTE[index % len(SOURCE_COLOR_PALETTE)]
+                for index, source in enumerate(sources)
+            }
+        return self._source_icons
 
     def establish_db_connection(self):
         """
@@ -301,8 +327,10 @@ class Fetchpostgres:
             "plz": q[5],
             "versammlung": Fetchpostgres.escape_special_html_characters(q[6]),
             "location": q[7],
+            "source": q[8] if len(q) > 8 else None,
         }
         newline = "\n"
+        source_icon = self.get_source_icons().get(data["source"], "")
         date = f'<b><ins>{data["date"].strftime("%d.%m.%Y")}</ins></b>' if data["date"] else ""
         time_range = (
             f'<ins>{data["time range start"].strftime("%H:%M")}</ins> to <ins>{data["time range end"].strftime("%H:%M:")}</ins>'
@@ -333,7 +361,8 @@ class Fetchpostgres:
             if data["location"]
             else ""
         )
-        return f"🔹️{date}{' - ' if date and time_range else ''}{time_range}{newline}{thema}{versammlungsort}{aufzugsstrecke}"
+        source_marker = source_icon if source_icon else "🔹️"
+        return f"{source_marker} {date}{' - ' if date and time_range else ''}{time_range}{newline}{thema}{versammlungsort}{aufzugsstrecke}"
 
     def format_postgre_queries(self, queries):
         """
