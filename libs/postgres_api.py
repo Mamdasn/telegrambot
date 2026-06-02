@@ -36,7 +36,8 @@ class Fetchpostgres:
         Assign a color square to each event category.
 
         Categories are sorted before colors are assigned. The result is cached so
-        every event in the same category uses the same color.
+        every event in the same category uses the same color. The bar/cafe, food
+        label uses the food color.
 
         :return: Category names and their color squares.
         :rtype: dict
@@ -48,12 +49,19 @@ class Fetchpostgres:
                     "WHERE category IS NOT NULL AND btrim(category) <> '' "
                     "ORDER BY category"
                 )
-                categories = [row[0] for row in cursor.fetchall()]
+                categories = sorted(
+                    {self._category_color_key(row[0]) for row in cursor.fetchall()}
+                )
             self._category_icons = {
                 category: CATEGORY_COLOR_PALETTE[index % len(CATEGORY_COLOR_PALETTE)]
                 for index, category in enumerate(categories)
             }
         return self._category_icons
+
+    @staticmethod
+    def _category_color_key(category):
+        category = (category or "").strip()
+        return "food" if category == "bar/cafe, food" else category
 
     def establish_db_connection(self):
         """
@@ -341,7 +349,9 @@ class Fetchpostgres:
             ),
         }
         newline = "\n"
-        category_icon = self.get_category_icons().get(q[10] if len(q) > 10 else None, "")
+        category_icon = self.get_category_icons().get(
+            self._category_color_key(q[10] if len(q) > 10 else None), ""
+        )
         date = f'<b><ins>{data["date"].strftime("%d.%m.%Y")}</ins></b>' if data["date"] else ""
         time_range = (
             f'<ins>{data["time range start"].strftime("%H:%M")}</ins> to <ins>{data["time range end"].strftime("%H:%M:")}</ins>'
