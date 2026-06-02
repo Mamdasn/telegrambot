@@ -192,7 +192,9 @@ For example: <i>'@ProtestsBerlinBot ukraine'</i>"""
             search_query = message.split(" ", 1)[-1].split(",")
             queries = fetcher.get_query_any_column(
                 search_query,
-                columns=["Aufzugsstrecke", "Versammlungsort", "Thema", "PLZ", "Datum"],
+                columns=[
+                    "Aufzugsstrecke", "Versammlungsort", "Thema", "PLZ", "Datum", "category",
+                ],
             )
         if not queries:
             queries = ["There's nothing to show."]
@@ -308,7 +310,9 @@ def handle_inline_query(inline_query_id, message_info):
     search_query = message_info.split(",")
     queries = fetcher.get_query_any_column(
         search_query,
-        columns=["Aufzugsstrecke", "Versammlungsort", "Thema", "PLZ", "Datum"],
+        columns=[
+            "Aufzugsstrecke", "Versammlungsort", "Thema", "PLZ", "Datum", "category",
+        ],
     )
     results = []
     if queries:
