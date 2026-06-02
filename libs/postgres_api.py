@@ -1,6 +1,7 @@
 import datetime
 import logging
 from functools import partial
+from html import escape
 from time import sleep
 
 import psycopg2
@@ -360,7 +361,19 @@ class Fetchpostgres:
             if data["time range start"]
             else ""
         )
-        thema = f"<b>Thema</b>: <i>{data['thema']}</i>{newline}" if data["thema"] else ""
+        event_url = (
+            escape(data["source"], quote=True)
+            if isinstance(data["source"], str)
+            and data["source"].startswith(("http://", "https://"))
+            else None
+        )
+        thema = (
+            f'<b>Thema</b>: <a href="{event_url}"><i>{data["thema"]}</i></a>{newline}'
+            if event_url and data["thema"]
+            else f"<b>Thema</b>: <i>{data['thema']}</i>{newline}"
+            if data["thema"]
+            else ""
+        )
         description = (
             f"<b>Beschreibung</b>: <i>{data['description']}</i>{newline}"
             if data["description"]
