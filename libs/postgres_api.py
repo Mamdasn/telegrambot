@@ -328,6 +328,16 @@ class Fetchpostgres:
             "versammlung": Fetchpostgres.escape_special_html_characters(q[6]),
             "location": q[7],
             "source": q[8] if len(q) > 8 else None,
+            "description": (
+                Fetchpostgres.escape_special_html_characters(q[9])
+                if len(q) > 9 and q[9]
+                else None
+            ),
+            "category": (
+                Fetchpostgres.escape_special_html_characters(q[10])
+                if len(q) > 10 and q[10]
+                else None
+            ),
         }
         newline = "\n"
         source_icon = self.get_source_icons().get(data["source"], "")
@@ -340,6 +350,16 @@ class Fetchpostgres:
             else ""
         )
         thema = f"<b>Thema</b>: <i>{data['thema']}</i>{newline}" if data["thema"] else ""
+        description = (
+            f"<b>Beschreibung</b>: <i>{data['description']}</i>{newline}"
+            if data["description"]
+            else ""
+        )
+        category = (
+            f"<b>Kategorie</b>: <i>{data['category']}</i>{newline}"
+            if data["category"]
+            else ""
+        )
         plz = (
             f"; {data['plz']}"
             if ((data["plz"] != "") and (data["plz"] != "00000"))
@@ -362,7 +382,7 @@ class Fetchpostgres:
             else ""
         )
         source_marker = source_icon if source_icon else "🔹️"
-        return f"{source_marker} {date}{' - ' if date and time_range else ''}{time_range}{newline}{thema}{versammlungsort}{aufzugsstrecke}"
+        return f"{source_marker} {date}{' - ' if date and time_range else ''}{time_range}{newline}{thema}{category}{description}{versammlungsort}{aufzugsstrecke}"
 
     def format_postgre_queries(self, queries):
         """
