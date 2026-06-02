@@ -6,9 +6,9 @@ from time import sleep
 
 import psycopg2
 
-logger = logging.getLogger(__name__)
+from .category_colors import category_color
 
-CATEGORY_COLOR_PALETTE = ("🟥", "🟦", "🟪", "🟩", "🟨", "🟧", "🟫")
+logger = logging.getLogger(__name__)
 
 
 class Fetchpostgres:
@@ -34,11 +34,10 @@ class Fetchpostgres:
 
     def get_category_icons(self):
         """
-        Assign a color square to each event category.
+        Assign a color square to each stored category value.
 
-        Categories are sorted before colors are assigned. The result is cached so
-        every event in the same category uses the same color. The bar/cafe, food
-        label uses the food color.
+        The result is cached so repeated category values do not need to be
+        classified again.
 
         :return: Category names and their color squares.
         :rtype: dict
@@ -50,19 +49,11 @@ class Fetchpostgres:
                     "WHERE category IS NOT NULL AND btrim(category) <> '' "
                     "ORDER BY category"
                 )
-                categories = sorted(
-                    {self._category_color_key(row[0]) for row in cursor.fetchall()}
-                )
+                categories = [row[0] for row in cursor.fetchall()]
             self._category_icons = {
-                category: CATEGORY_COLOR_PALETTE[index % len(CATEGORY_COLOR_PALETTE)]
-                for index, category in enumerate(categories)
+                category: category_color(category) for category in categories
             }
         return self._category_icons
-
-    @staticmethod
-    def _category_color_key(category):
-        category = (category or "").strip()
-        return "food" if category == "bar/cafe, food" else category
 
     def establish_db_connection(self):
         """
@@ -350,9 +341,10 @@ class Fetchpostgres:
             ),
         }
         newline = "\n"
-        category_icon = self.get_category_icons().get(
-            self._category_color_key(q[10] if len(q) > 10 else None), ""
-        )
+        category_value = q[10] if len(q) > 10 else None
+        category_icon = self.get_category_icons().get(category_value)
+        if not category_icon:
+            category_icon = category_color(category_value)
         date = f'<b><ins>{data["date"].strftime("%d.%m.%Y")}</ins></b>' if data["date"] else ""
         time_range = (
             f'<ins>{data["time range start"].strftime("%H:%M")}</ins> to <ins>{data["time range end"].strftime("%H:%M:")}</ins>'
