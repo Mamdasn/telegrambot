@@ -7,7 +7,7 @@ import psycopg2
 
 logger = logging.getLogger(__name__)
 
-SOURCE_COLOR_PALETTE = ("🟥", "🟦", "🟪", "🟩", "🟨", "🟧", "🟫")
+CATEGORY_COLOR_PALETTE = ("🟥", "🟦", "🟪", "🟩", "🟨", "🟧", "🟫")
 
 
 class Fetchpostgres:
@@ -29,30 +29,31 @@ class Fetchpostgres:
         """
         self.params = params
         self.connection = psycopg2.connect
-        self._source_icons = None
+        self._category_icons = None
 
-    def get_source_icons(self):
+    def get_category_icons(self):
         """
-        Map each event source to a color icon, ordered alphabetically by source.
+        Assign a color square to each event category.
 
-        The distinct sources are read from the database once and cached, so the
-        color assignment is consistent across every formatted event.
+        Categories are sorted before colors are assigned. The result is cached so
+        every event in the same category uses the same color.
 
-        :return: A mapping of source name to its color square.
+        :return: Category names and their color squares.
         :rtype: dict
         """
-        if self._source_icons is None:
+        if self._category_icons is None:
             with self.establish_db_connection().cursor() as cursor:
                 cursor.execute(
-                    "SELECT DISTINCT source FROM events "
-                    "WHERE source IS NOT NULL ORDER BY source"
+                    "SELECT DISTINCT category FROM events "
+                    "WHERE category IS NOT NULL AND btrim(category) <> '' "
+                    "ORDER BY category"
                 )
-                sources = [row[0] for row in cursor.fetchall()]
-            self._source_icons = {
-                source: SOURCE_COLOR_PALETTE[index % len(SOURCE_COLOR_PALETTE)]
-                for index, source in enumerate(sources)
+                categories = [row[0] for row in cursor.fetchall()]
+            self._category_icons = {
+                category: CATEGORY_COLOR_PALETTE[index % len(CATEGORY_COLOR_PALETTE)]
+                for index, category in enumerate(categories)
             }
-        return self._source_icons
+        return self._category_icons
 
     def establish_db_connection(self):
         """
@@ -340,7 +341,7 @@ class Fetchpostgres:
             ),
         }
         newline = "\n"
-        source_icon = self.get_source_icons().get(data["source"], "")
+        category_icon = self.get_category_icons().get(q[10] if len(q) > 10 else None, "")
         date = f'<b><ins>{data["date"].strftime("%d.%m.%Y")}</ins></b>' if data["date"] else ""
         time_range = (
             f'<ins>{data["time range start"].strftime("%H:%M")}</ins> to <ins>{data["time range end"].strftime("%H:%M:")}</ins>'
@@ -381,8 +382,8 @@ class Fetchpostgres:
             if data["location"]
             else ""
         )
-        source_marker = source_icon if source_icon else "🔹️"
-        return f"{source_marker} {date}{' - ' if date and time_range else ''}{time_range}{newline}{thema}{category}{description}{versammlungsort}{aufzugsstrecke}"
+        category_marker = category_icon if category_icon else "🔹️"
+        return f"{category_marker} {date}{' - ' if date and time_range else ''}{time_range}{newline}{thema}{category}{description}{versammlungsort}{aufzugsstrecke}"
 
     def format_postgre_queries(self, queries):
         """
