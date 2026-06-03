@@ -2,8 +2,8 @@ import re
 from collections import defaultdict
 
 GROUP_COLORS = {
-    "commerce": "🟥",
-    "activism_legal": "🟦",
+    "commerce": "🟦",
+    "activism_legal": "🟥",
     "support": "🟨",
     "food_drink": "🟧",
     "education_resources": "🟩",
